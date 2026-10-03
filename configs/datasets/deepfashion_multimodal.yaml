@@ -1,0 +1,6 @@
+name: deepfashion_multimodal
+role: backup
+source: https://github.com/yumingj/DeepFashion-MultiModal
+selection_status: backup
+verified_locally: false
+notes: Use only if full-body parsing, pose, fabric, pattern, or text work is needed.

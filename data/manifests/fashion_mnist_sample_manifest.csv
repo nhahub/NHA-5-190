@@ -1,0 +1,6 @@
+item_id,source_dataset,source_split,source_index,category_label,original_image_path,preview_image_path
+fashion_mnist_train_000000,Fashion-MNIST,train,0,Ankle boot,data/samples/fashion_mnist/original_28x28/fashion_mnist_train_000000_Ankle_boot.png,data/samples/fashion_mnist/preview_280x280/fashion_mnist_train_000000_Ankle_boot.png
+fashion_mnist_train_000001,Fashion-MNIST,train,1,T-shirt top,data/samples/fashion_mnist/original_28x28/fashion_mnist_train_000001_T-shirt_top.png,data/samples/fashion_mnist/preview_280x280/fashion_mnist_train_000001_T-shirt_top.png
+fashion_mnist_train_000002,Fashion-MNIST,train,2,T-shirt top,data/samples/fashion_mnist/original_28x28/fashion_mnist_train_000002_T-shirt_top.png,data/samples/fashion_mnist/preview_280x280/fashion_mnist_train_000002_T-shirt_top.png
+fashion_mnist_train_000003,Fashion-MNIST,train,3,Dress,data/samples/fashion_mnist/original_28x28/fashion_mnist_train_000003_Dress.png,data/samples/fashion_mnist/preview_280x280/fashion_mnist_train_000003_Dress.png
+fashion_mnist_train_000004,Fashion-MNIST,train,4,T-shirt top,data/samples/fashion_mnist/original_28x28/fashion_mnist_train_000004_T-shirt_top.png,data/samples/fashion_mnist/preview_280x280/fashion_mnist_train_000004_T-shirt_top.png

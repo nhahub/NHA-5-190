@@ -1,0 +1,8 @@
+name: fashion_mnist
+role: smoke_test
+release: zalando-research/fashion-mnist IDX release
+source: https://github.com/zalandoresearch/fashion-mnist
+splits: [train, test]
+manifest: data/manifests/raw_manifest.csv
+id_pattern: fashion_mnist_<split>_<zero_based_index>
+notes: No validation split; no filenames or external image IDs.

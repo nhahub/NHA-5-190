@@ -1,0 +1,6 @@
+source_split,parquet_row_index,item_id,image_filename,outfit_id,outfit_item_index,category_id,semantic_category,metadata_label,description_available,visual_observation,result
+disjoint/validation,0,114380093,114380093.jpg,223369815,1,37,bags,bucket bag black,No,Black bucket-style shoulder bag,Matched
+disjoint/validation,1,156386331,156386331.jpg,219832237,2,46,shoes,Prada Microsole Leather Double-Band Sandals,Yes,Black double-band platform sandals,Matched
+disjoint/validation,2,138007061,138007061.jpg,212053035,2,265,shoes,pierre hardy patent leather platform,No,Metallic platform loafers,Matched
+disjoint/validation,3,50479717,50479717.jpg,152130081,4,29,bottoms,marc jacobs shorts,No,Grey plaid shorts,Matched
+disjoint/validation,4,213366441,213366441.jpg,224931182,1,37,bags,summer lovin shoulder bag,No,Straw drawstring summer shoulder bag,Matched

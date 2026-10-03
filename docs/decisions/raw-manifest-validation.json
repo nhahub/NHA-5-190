@@ -1,0 +1,13 @@
+{
+  "file": "data/manifests/raw_manifest.csv",
+  "sha256": "6fc8e4e2b1f6a2f02c9582b3d9b208cb9240a0cdae7fc3d729e22be196c8aae1",
+  "rows": 85815,
+  "duplicate_item_ids": 0,
+  "blank_item_ids": 0,
+  "counts": {
+    "Fashion-MNIST / train": 60000,
+    "Fashion-MNIST / test": 10000,
+    "Fashionpedia / validation": 1158,
+    "Polyvore Outfits / disjoint validation": 14657
+  }
+}

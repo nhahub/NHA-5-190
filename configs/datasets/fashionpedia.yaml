@@ -1,0 +1,10 @@
+name: fashionpedia
+role: garment_understanding
+release: Fashionpedia 2020
+source: https://github.com/cvdfoundation/fashionpedia
+format: COCO-style JSON with attribute extensions
+primary_categories: 27
+secondary_part_categories: 19
+selection_status: provisional
+manifest: data/manifests/raw_manifest.csv
+notes: Training annotations must be verified before training.

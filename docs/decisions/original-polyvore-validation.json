@@ -1,0 +1,84 @@
+{
+  "generated_at": "2026-09-21T20:00:11.416118",
+  "source": "xthan/polyvore-dataset",
+  "train": {
+    "outfits": 17316,
+    "unique_set_ids": 17316,
+    "item_references": 114806,
+    "unique_item_references": 114806,
+    "outfit_size_min": 4,
+    "outfit_size_median": 7.0,
+    "outfit_size_mean": 6.63,
+    "outfit_size_max": 8
+  },
+  "validation": {
+    "outfits": 1497,
+    "unique_set_ids": 1497,
+    "item_references": 9070,
+    "unique_item_references": 9070,
+    "outfit_size_min": 4,
+    "outfit_size_median": 6,
+    "outfit_size_mean": 6.059,
+    "outfit_size_max": 8
+  },
+  "test": {
+    "outfits": 3076,
+    "unique_set_ids": 3076,
+    "item_references": 18604,
+    "unique_item_references": 18604,
+    "outfit_size_min": 4,
+    "outfit_size_median": 6.0,
+    "outfit_size_mean": 6.048,
+    "outfit_size_max": 8
+  },
+  "split_overlap": {
+    "train_validation": {
+      "sets": 0,
+      "items": 0
+    },
+    "train_test": {
+      "sets": 0,
+      "items": 0
+    },
+    "validation_test": {
+      "sets": 0,
+      "items": 0
+    }
+  },
+  "categories": {
+    "mapping_count": 380,
+    "used_count": 380,
+    "unmapped_used_count": 0
+  },
+  "fitb": {
+    "questions": 3076,
+    "answers_per_question": [
+      4
+    ],
+    "references": 27832,
+    "unique_references": 18604,
+    "missing_references": 0
+  },
+  "compatibility": {
+    "examples": 7076,
+    "compatible": 3076,
+    "incompatible": 4000,
+    "missing_references": 0
+  },
+  "storage": {
+    "archive_bytes": 8412072,
+    "extracted_bytes": 58504139
+  },
+  "sha256": {
+    "fashion_compatibility_prediction.txt": "31699a6dd84714ceb8bd56f1a6616af2a66622fc94478007dd55253909b1358a",
+    "fill_in_blank_test.json": "fedef9de68bbc7bc9b704dca6dcd964fbab2afc33c7d2fe537175e05b30c7958",
+    "test_no_dup.json": "35e795a588c2eacbe081a4e2ee920a3993dd6b687f5c1f4964038bb5244d74ef",
+    "train_no_dup.json": "afac784bbf2afd749d2f85a5562f4d48ef41b6f2e1b5a19ae1952cefc9bc99d3",
+    "valid_no_dup.json": "5ce34742602d857c72d0621ebbd9750023dd8708bf4eb7748d87985fc89043f8"
+  },
+  "image_url_sample_test": {
+    "tested": 5,
+    "successful": 0,
+    "http_403": 5
+  }
+}

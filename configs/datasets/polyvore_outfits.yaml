@@ -1,0 +1,8 @@
+name: polyvore_outfits
+role: outfit_compatibility
+source: https://huggingface.co/datasets/mvasil/polyvore-outfits
+reference_code: https://github.com/mvasil/fashion-compatibility
+preferred_variant: disjoint
+selection_status: selected
+manifest: data/manifests/raw_manifest.csv
+notes: Follow the stricter academic/nonprofit condition; do not redistribute images.

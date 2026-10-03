@@ -1,0 +1,47 @@
+name: Milestone task
+description: Track an owned WARDIQ deliverable and its handoff.
+title: "[M_] "
+labels: ["task"]
+body:
+  - type: dropdown
+    id: milestone
+    attributes:
+      label: Milestone
+      options:
+        - M1 - Data
+        - M2 - Representation
+        - M3 - Compatibility
+        - M4 - Personalization
+        - M5 - Evaluation
+    validations:
+      required: true
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      placeholder: Full name
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Required outcome
+      description: Describe the reviewable result, not only the activity.
+    validations:
+      required: true
+  - type: textarea
+    id: inputs
+    attributes:
+      label: Inputs and dependencies
+  - type: textarea
+    id: outputs
+    attributes:
+      label: Output contract
+      description: List paths, schemas, metrics, or interfaces delivered downstream.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance checks
+      value: "- [ ] Reproducible command recorded\n- [ ] Output contract documented\n- [ ] Downstream owner can consume the output"

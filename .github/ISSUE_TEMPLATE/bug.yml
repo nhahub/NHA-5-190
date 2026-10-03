@@ -1,0 +1,28 @@
+name: Bug report
+description: Report a reproducible problem in code, data, or an output contract.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Include command, config, dataset release/split, and seed when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Downstream impact
