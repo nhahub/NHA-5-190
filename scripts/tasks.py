@@ -14,6 +14,9 @@ SCOPE = [
     "scripts/tasks.py",
     "scripts/validate_repository.py",
     "scripts/check_artifacts.py",
+    "scripts/research_cli.py",
+    "scripts/check_research_samples.py",
+    "scripts/compare_manifest.py",
 ]
 
 
@@ -28,6 +31,7 @@ def main() -> int:
         "test": ["-m", "pytest"],
         "validate": ["scripts/validate_repository.py"],
         "artifacts": ["scripts/check_artifacts.py"],
+        "samples": ["scripts/check_research_samples.py"],
     }
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("task", choices=commands)

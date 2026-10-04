@@ -45,9 +45,9 @@ For dataset download and inspection scripts, add the data dependencies:
 python -m pip install -e ".[data]"
 ```
 
-Raw-input research scripts are not yet portable across laptops; see the M1 data
-instructions for required source files. The repository validation does not require
-raw downloads.
+Research scripts accept portable input paths; see [reproduction commands](docs/REPRODUCIBILITY.md)
+for required raw files and verified checks. Repository validation does not require
+raw downloads. Use `python scripts/tasks.py samples` for committed-sample checks.
 
 Install the optional ML stack only when model work begins:
 
