@@ -88,6 +88,8 @@ Detailed weekly assignments are in [team ownership](docs/team/OWNERSHIP.md).
 Milestone input/output requirements and review evidence are described in the
 [handoff checklist](docs/HANDOFFS.md). The current milestone pages describe planned
 work and explicit acceptance status; infrastructure checks do not complete team tasks.
+See [draft shared types](docs/CONTRACTS.md) and [review routing](docs/team/REVIEWERS.md)
+for interface agreement and blocked-dependency coordination.
 
 ## Collaboration rules
 

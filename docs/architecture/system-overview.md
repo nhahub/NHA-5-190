@@ -5,6 +5,9 @@ below is illustrative until the assigned owners freeze its schema, field shapes,
 score meanings and missing-value policy. These documents do not supply model,
 loader, scoring or personalization implementations. Follow the milestone pages
 and [handoff review requirements](../HANDOFFS.md) for acceptance evidence.
+Importable draft types and their proposed conventions are described in
+[shared contracts](../CONTRACTS.md). This earlier JSON example omits the proposed
+release/provenance fields and is not a complete accepted record.
 
 ## Module boundaries
 

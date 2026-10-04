@@ -20,3 +20,6 @@ Primary ownership clarifies accountability; it does not prevent collaboration.
 - Asmaa verifies end-to-end evaluation readiness after M4.
 
 A handoff is ready when the downstream owner can run the documented command, understand the schema, and reproduce the output without private instructions.
+
+See [review routing and pending backup reviewers](REVIEWERS.md) for GitHub review
+coordination and the handoff-blocker issue workflow. Existing task assignments remain unchanged.

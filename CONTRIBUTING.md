@@ -64,6 +64,12 @@ conditions remain separate; no code license grants rights to dataset images.
 
 Every pull request states the task and milestone, input/output contracts, validation commands, data or reproducibility limitations, and downstream reviewer. Use `Closes #<issue>` when it completes an issue. CI must pass before merge.
 
+Shared interfaces are [draft Python contracts](docs/CONTRACTS.md); agree changes
+with the producer and downstream reviewer before freezing them. For missing
+upstream artifacts or decisions, use the **Handoff blocker** issue template and
+[review routing](docs/team/REVIEWERS.md). No teammate handle or backup is implied
+by the existing fallback CODEOWNERS account.
+
 ## Data and artifact rules
 
 - Never commit full raw datasets, credentials, environment files, model checkpoints, or experiment caches.

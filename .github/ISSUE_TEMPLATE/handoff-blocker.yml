@@ -1,0 +1,60 @@
+name: Handoff blocker
+description: Record an upstream dependency or decision blocking a milestone handoff.
+title: "[Handoff blocker] "
+body:
+  - type: dropdown
+    id: boundary
+    attributes:
+      label: Blocked handoff
+      options:
+        - M1 to M2
+        - M2 to M3
+        - M3 to M4
+        - M4 to M5
+        - Final delivery
+    validations:
+      required: true
+  - type: input
+    id: producer
+    attributes:
+      label: Upstream owner
+      description: Use the assigned name or confirmed GitHub handle.
+    validations:
+      required: true
+  - type: input
+    id: consumer
+    attributes:
+      label: Downstream owner / reviewer
+    validations:
+      required: true
+  - type: textarea
+    id: blocker
+    attributes:
+      label: Missing input or decision
+      description: State what is missing and which specific downstream work it prevents.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Reproduction and evidence
+      description: Include commit, schema/config versions, command and redacted error/output. Do not paste tokens or gated images.
+    validations:
+      required: true
+  - type: textarea
+    id: resolution
+    attributes:
+      label: Requested resolution and acceptance check
+      description: Describe the artifact or decision needed and how the consumer will verify it.
+    validations:
+      required: true
+  - type: input
+    id: needed_by
+    attributes:
+      label: Needed by
+      description: Give a proposed date or milestone gate; do not invent an agreed deadline.
+  - type: textarea
+    id: parallel_work
+    attributes:
+      label: Work that can continue / proposed fallback
+      description: Record independent work and any fallback needing owner approval.

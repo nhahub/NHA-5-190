@@ -1,6 +1,10 @@
-# Add member GitHub handles as they become available.
+# @nhahub is the existing fallback; this does not confirm team/domain reviewer approval.
+# Add confirmed member and backup handles after the team resolves REVIEWERS.md.
 * @nhahub
 /data/ @nhahub
 /configs/ @nhahub
 /docs/architecture/ @nhahub
 /.github/ @nhahub
+/src/wardiq/ @nhahub
+/tests/ @nhahub
+/scripts/ @nhahub
