@@ -1,0 +1,27 @@
+# Optional: install .[dev] with normal Python before running these hooks.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: Ruff shared-code lint
+        entry: python -m ruff check
+        language: system
+        types: [python]
+        files: ^(src/|tests/|scripts/(tasks|validate_repository)\.py$)
+      - id: ruff-format
+        name: Ruff shared-code format check
+        entry: python -m ruff format --check
+        language: system
+        types: [python]
+        files: ^(src/|tests/|scripts/(tasks|validate_repository)\.py$)
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+        exclude: ^(data/|docs/decisions/|docs/milestones/M1-data-handoff\.md$)
+      - id: trailing-whitespace
+        exclude: ^(data/|docs/decisions/|docs/milestones/M1-data-handoff\.md$)
+      - id: check-added-large-files
+        args: [--maxkb=5120, --enforce-all]
+        exclude: ^data/manifests/raw_manifest\.csv$
+      - id: detect-private-key

@@ -7,10 +7,23 @@ from dataclasses import dataclass
 from pathlib import Path
 
 REQUIRED_COLUMNS = (
-    "item_id", "source_dataset", "source_release", "source_split", "source_index",
-    "source_image_id", "original_filename", "original_image_reference",
-    "annotation_reference", "category_ids", "category_labels", "attribute_ids",
-    "annotation_ids", "outfit_ids", "image_width", "image_height", "traceability_status",
+    "item_id",
+    "source_dataset",
+    "source_release",
+    "source_split",
+    "source_index",
+    "source_image_id",
+    "original_filename",
+    "original_image_reference",
+    "annotation_reference",
+    "category_ids",
+    "category_labels",
+    "attribute_ids",
+    "annotation_ids",
+    "outfit_ids",
+    "image_width",
+    "image_height",
+    "traceability_status",
 )
 
 

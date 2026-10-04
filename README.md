@@ -29,11 +29,25 @@ flowchart LR
 ## Quick start
 
 ```powershell
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev,data]"
+python -m pip install -e ".[dev]"
 python scripts/validate_repository.py
-pytest
+python -m pytest
 ```
+
+Run these commands from the repository root using your normal Python interpreter.
+No virtual environment or activation is required. Python 3.10+ is declared; local
+baseline validation used Python 3.13.15. Other versions and dependency installation
+must pass clean-install checks before compatibility is considered verified.
+
+For dataset download and inspection scripts, add the data dependencies:
+
+```powershell
+python -m pip install -e ".[data]"
+```
+
+Raw-input research scripts are not yet portable across laptops; see the M1 data
+instructions for required source files. The repository validation does not require
+raw downloads.
 
 Install the optional ML stack only when model work begins:
 

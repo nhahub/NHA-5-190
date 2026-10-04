@@ -3,7 +3,6 @@ from pathlib import Path
 
 from wardiq.data import validate_manifest
 
-
 FIXTURES = Path(__file__).parent / "fixtures"
 
 

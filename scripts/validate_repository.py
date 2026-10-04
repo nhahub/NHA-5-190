@@ -14,10 +14,16 @@ if str(SRC) not in sys.path:
 from wardiq.data import validate_manifest  # noqa: E402
 
 REQUIRED_PATHS = (
-    "README.md", "CONTRIBUTING.md", "pyproject.toml", "data/README.md",
-    "data/manifests/raw_manifest.csv", "docs/proposal/PROJECT_PROPOSAL.md",
-    "docs/architecture/system-overview.md", "docs/team/OWNERSHIP.md",
-    "docs/milestones/M1.md", ".github/workflows/ci.yml",
+    "README.md",
+    "CONTRIBUTING.md",
+    "pyproject.toml",
+    "data/README.md",
+    "data/manifests/raw_manifest.csv",
+    "docs/proposal/PROJECT_PROPOSAL.md",
+    "docs/architecture/system-overview.md",
+    "docs/team/OWNERSHIP.md",
+    "docs/milestones/M1.md",
+    ".github/workflows/ci.yml",
 )
 
 
