@@ -39,6 +39,10 @@ No virtual environment or activation is required. Python 3.10+ is declared; loca
 baseline validation used Python 3.13.15. Other versions and dependency installation
 must pass clean-install checks before compatibility is considered verified.
 
+GitHub CI is configured to check Python 3.10, 3.11, and 3.12 on pull requests,
+pushes to `main` or `chore/repo-hardening`, and manual runs. See
+[CI checks and local commands](docs/CI.md) for scope and current verification limits.
+
 For dataset download and inspection scripts, add the data dependencies:
 
 ```powershell

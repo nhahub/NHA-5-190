@@ -7,13 +7,13 @@ repos:
         entry: python -m ruff check
         language: system
         types: [python]
-        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts|research_cli|check_research_samples|compare_manifest)\.py$)
+        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts|research_cli|check_research_samples|compare_manifest|check_links)\.py$)
       - id: ruff-format
         name: Ruff shared-code format check
         entry: python -m ruff format --check
         language: system
         types: [python]
-        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts|research_cli|check_research_samples|compare_manifest)\.py$)
+        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts|research_cli|check_research_samples|compare_manifest|check_links)\.py$)
       - id: artifact-policy
         name: Repository artifact policy (exact staged content)
         entry: python scripts/check_artifacts.py --staged
