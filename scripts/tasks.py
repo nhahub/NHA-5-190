@@ -8,7 +8,13 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCOPE = ["src", "tests", "scripts/tasks.py", "scripts/validate_repository.py"]
+SCOPE = [
+    "src",
+    "tests",
+    "scripts/tasks.py",
+    "scripts/validate_repository.py",
+    "scripts/check_artifacts.py",
+]
 
 
 def main() -> int:
@@ -21,6 +27,7 @@ def main() -> int:
         "typecheck": ["-m", "mypy"],
         "test": ["-m", "pytest"],
         "validate": ["scripts/validate_repository.py"],
+        "artifacts": ["scripts/check_artifacts.py"],
     }
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("task", choices=commands)

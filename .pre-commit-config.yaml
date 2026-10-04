@@ -7,13 +7,19 @@ repos:
         entry: python -m ruff check
         language: system
         types: [python]
-        files: ^(src/|tests/|scripts/(tasks|validate_repository)\.py$)
+        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts)\.py$)
       - id: ruff-format
         name: Ruff shared-code format check
         entry: python -m ruff format --check
         language: system
         types: [python]
-        files: ^(src/|tests/|scripts/(tasks|validate_repository)\.py$)
+        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts)\.py$)
+      - id: artifact-policy
+        name: Repository artifact policy (exact staged content)
+        entry: python scripts/check_artifacts.py --staged
+        language: system
+        pass_filenames: false
+        always_run: true
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
@@ -21,7 +27,4 @@ repos:
         exclude: ^(data/|docs/decisions/|docs/milestones/M1-data-handoff\.md$)
       - id: trailing-whitespace
         exclude: ^(data/|docs/decisions/|docs/milestones/M1-data-handoff\.md$)
-      - id: check-added-large-files
-        args: [--maxkb=5120, --enforce-all]
-        exclude: ^data/manifests/raw_manifest\.csv$
       - id: detect-private-key

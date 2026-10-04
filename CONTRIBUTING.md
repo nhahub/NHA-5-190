@@ -22,6 +22,7 @@ python scripts/tasks.py format-check
 python scripts/tasks.py typecheck
 python scripts/tasks.py test
 python scripts/tasks.py validate
+python scripts/tasks.py artifacts
 ```
 
 `python scripts/tasks.py format` changes only the shared package, tests, and the
@@ -42,6 +43,10 @@ Run hook installation yourself when Git metadata is writable. Hooks use the
 already-installed normal Python tools. Source datasets and weights remain local.
 The existing large manifest has a specific size-check exception; the exception
 does not establish the manifest's correctness or allow other large files.
+
+The [artifact policy](docs/audit/ARTIFACT_POLICY.md) explains working-tree versus
+exact staged checks and their limitations. The same checker runs during repository
+validation and optional pre-commit checks.
 
 ## Configuration and license
 

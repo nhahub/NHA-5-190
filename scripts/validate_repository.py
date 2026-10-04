@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
@@ -38,7 +39,9 @@ def main() -> int:
     print(f"Repository structure: OK ({len(REQUIRED_PATHS)} required paths)")
     print(f"Manifest: {report.rows:,} rows, {report.unique_item_ids:,} unique IDs")
     print(f"Datasets: {', '.join(report.datasets)}")
-    return 0
+    return subprocess.run(
+        [sys.executable, str(ROOT / "scripts/check_artifacts.py")], cwd=ROOT, check=False
+    ).returncode
 
 
 if __name__ == "__main__":
