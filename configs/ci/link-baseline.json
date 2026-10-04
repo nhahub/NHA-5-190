@@ -1,7 +1,1 @@
-[
-  {"file": "docs/decisions/dataset-selection.md", "target": "../data/samples/polyvore_outfits/inspection_report.md", "count": 3},
-  {"file": "docs/decisions/dataset-selection.md", "target": "review_corrections.md", "count": 1},
-  {"file": "docs/decisions/dataset-selection.md", "target": "../data/samples/fashionpedia/inspection_report.md", "count": 1},
-  {"file": "docs/decisions/dataset-selection.md", "target": "../data/samples/fashion_mnist/", "count": 1},
-  {"file": "docs/decisions/dataset-verification-notes.md", "target": "../data/samples/polyvore_outfits/inspection_report.md", "count": 1}
-]
+[]

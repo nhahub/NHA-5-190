@@ -1,6 +1,9 @@
 # WARDIQ data convention — Milestone 1
 
-This temporary structure is ready to copy into the instructor's repository. Raw data remains unchanged, derived files go under `processed/`, and every usable image has one row in `manifests/raw_manifest.csv`.
+This is the shared repository's data convention. Raw data remains unchanged,
+derived files go under `processed/`, and each inventoried source image has one row
+in `manifests/raw_manifest.csv`. Inventory presence does not establish that every
+raw file is available in a teammate's clone.
 
 ## Directory convention
 
@@ -39,11 +42,17 @@ The row unit is **one row per image**. Object annotations remain linked through 
 
 ## Team workflow
 
-1. Copy this `data/` folder and `scripts/` into the official repository when it arrives.
+1. Work from the existing repository clone; review [the M1 handoff](../docs/milestones/M1-data-handoff.md) and [reproduction commands](../docs/REPRODUCIBILITY.md).
 2. Put downloaded source files in the paths listed in `original_image_reference` and `annotation_reference`.
 3. Keep `data/raw/` read-only during processing.
 4. Write outputs to `data/processed/<dataset>/<pipeline-version>/` and keep `item_id` in every derived record.
-5. Run the sample checks in `data/samples/` before a loader is accepted.
+5. Run `python scripts/tasks.py samples` after installing `.[data]`, then run the loader owner's documented acceptance command. The committed-sample check alone does not validate a loader.
+
+Research reports and manifest regeneration default to ignored `artifacts/m1/`.
+Compare a regenerated manifest with `python scripts/compare_manifest.py` before
+proposing an update to committed evidence. Fashion-MNIST has no official validation
+split; any project validation partition belongs in Omar's saved split configuration.
+Committed Fashion-MNIST PNGs are enlarged previews, not native 28x28 loader inputs.
 
 ## Current limitations
 

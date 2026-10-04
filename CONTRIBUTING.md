@@ -23,6 +23,7 @@ python scripts/tasks.py typecheck
 python scripts/tasks.py test
 python scripts/tasks.py validate
 python scripts/tasks.py artifacts
+python scripts/tasks.py links
 ```
 
 `python scripts/tasks.py format` changes only the shared package, tests, and the
@@ -52,8 +53,9 @@ validation and optional pre-commit checks.
 
 No Python code currently reads environment variables from `.env.example`.
 Those entries are explicitly planned, not active configuration. No dotenv loader
-is implemented. Configure research inputs through their documented script paths
-until Phase 3 makes them portable.
+is implemented. Configure research inputs with the versioned
+`configs/research/m1.json` or explicit CLI overrides described in
+[research reproduction](docs/REPRODUCIBILITY.md).
 
 The project owner must select the code license. Dataset access and redistribution
 conditions remain separate; no code license grants rights to dataset images.
@@ -74,3 +76,7 @@ Every pull request states the task and milestone, input/output contracts, valida
 ## Definition of done
 
 A task is done when its output is reproducible, documented, checked where the shared contract can break, and usable by its downstream owner.
+
+Submit the [handoff review packet](docs/HANDOFFS.md) for milestone acceptance.
+Milestone dates describe the original plan; unchecked acceptance items and reviewer
+sign-off determine readiness. Infrastructure CI does not mark model or data work done.

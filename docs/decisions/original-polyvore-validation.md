@@ -1,5 +1,24 @@
 # Polyvore repositories validation report
 
+## Historical scope and current status
+
+The report below preserves the initial metadata and anonymous-access observations.
+Its "blocked" statements describe that earlier check, not the current approved
+Polyvore Outfits access. Subsequent approved access on 2026-09-21 and the five-image
+disjoint-validation inspection are recorded in [verification notes](dataset-verification-notes.md)
+and the [sample report](../../data/samples/polyvore_outfits/inspection_report.md).
+The two Polyvore releases must remain separate; newer access does not repair the
+original release's tested legacy image URLs.
+
+The earlier "zero item IDs" overlap result used outfit-position references, not
+product identity. It does not establish product-level disjointness. Phase 3 reruns
+also reported 98 FITB answer-index versus blank-position differences that need
+dataset-owner interpretation. See [reproduction scope and commands](../REPRODUCIBILITY.md).
+The historical JSON report is preserved unchanged; neither report accepts the
+team's eventual leakage checks or compatibility training data.
+
+## Preserved initial observations
+
 ## Original Polyvore metadata (xthan/polyvore-dataset)
 
 - Archive downloaded and extracted successfully.

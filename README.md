@@ -85,6 +85,9 @@ python -m pip install -e ".[ml]"
 | Asmaa Tamer | Evaluation, documentation, and integration |
 
 Detailed weekly assignments are in [team ownership](docs/team/OWNERSHIP.md).
+Milestone input/output requirements and review evidence are described in the
+[handoff checklist](docs/HANDOFFS.md). The current milestone pages describe planned
+work and explicit acceptance status; infrastructure checks do not complete team tasks.
 
 ## Collaboration rules
 

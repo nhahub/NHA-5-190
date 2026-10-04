@@ -39,11 +39,10 @@ untracked Markdown files, excluding fenced code, URLs, and anchor-only links.
 It checks file existence, not heading anchors, reference-style links, HTML links,
 or remote websites. Root-relative paths resolve against the repository root.
 
-`configs/ci/link-baseline.json` records exactly seven existing broken occurrences
-in the research decision documents from Phase 0. Those documents remain unchanged
-during Phase 6. New broken links or additional occurrences fail the check. Once a
-baseline link is repaired in Phase 7, remove its exception; stale exceptions fail.
-The checker prints the remaining baseline count on every run.
+`configs/ci/link-baseline.json` is now empty: Phase 7 repaired the seven broken
+occurrences recorded in Phase 0. Any broken local link fails the check. Counted
+exceptions, if ever explicitly approved, cannot grow silently; stale exceptions
+also fail. The checker prints the remaining baseline count on every run.
 
 ## Verification and merge settings
 
