@@ -1,10 +1,11 @@
-from pathlib import Path
 import csv
 import struct
 import zlib
 
-DATA_DIR = Path("data/raw/fashion_mnist")
-OUTPUT_DIR = Path("data/samples/fashion_mnist")
+from research_cli import ROOT, arguments, protect_evidence, run
+
+DATA_DIR = ROOT / "data/raw/fashion_mnist"
+OUTPUT_DIR = ROOT / "artifacts/m1/fashion_mnist"
 ORIGINAL_DIR = OUTPUT_DIR / "original_28x28"
 PREVIEW_DIR = OUTPUT_DIR / "preview_280x280"
 
@@ -30,11 +31,7 @@ PREVIEW_SCALE = 10
 
 def png_chunk(chunk_type, data):
     body = chunk_type + data
-    return (
-        struct.pack(">I", len(data))
-        + body
-        + struct.pack(">I", zlib.crc32(body) & 0xFFFFFFFF)
-    )
+    return struct.pack(">I", len(data)) + body + struct.pack(">I", zlib.crc32(body) & 0xFFFFFFFF)
 
 
 def write_grayscale_png(path, width, height, pixels):
@@ -70,15 +67,10 @@ def enlarge_pixels(pixels, width, height, scale):
 
 def load_samples():
     with IMAGE_FILE.open("rb") as image_file:
-        image_magic, image_count, rows, columns = struct.unpack(
-            ">IIII", image_file.read(16)
-        )
+        image_magic, image_count, rows, columns = struct.unpack(">IIII", image_file.read(16))
         if image_magic != 2051:
             raise ValueError("Invalid IDX image file.")
-        images = [
-            image_file.read(rows * columns)
-            for _ in range(NUMBER_OF_SAMPLES)
-        ]
+        images = [image_file.read(rows * columns) for _ in range(NUMBER_OF_SAMPLES)]
 
     with LABEL_FILE.open("rb") as label_file:
         label_magic, label_count = struct.unpack(">II", label_file.read(8))
@@ -89,14 +81,30 @@ def load_samples():
     if image_count != label_count:
         raise ValueError("Image and label counts do not match.")
 
+    if NUMBER_OF_SAMPLES > image_count or len(labels) != NUMBER_OF_SAMPLES:
+        raise ValueError("Requested samples exceed available IDX records.")
+    if any(len(image) != rows * columns for image in images):
+        raise ValueError("Truncated IDX image record.")
+    if any(label >= len(CLASSES) for label in labels):
+        raise ValueError("Invalid Fashion-MNIST label.")
     return images, labels, rows, columns, image_count
 
 
 def main():
+    global DATA_DIR, OUTPUT_DIR, ORIGINAL_DIR, PREVIEW_DIR, IMAGE_FILE, LABEL_FILE
+    global NUMBER_OF_SAMPLES, PREVIEW_SCALE
+    args = arguments("export_fashion_mnist_samples")
+    DATA_DIR, OUTPUT_DIR = args.data_dir, args.output
+    NUMBER_OF_SAMPLES, PREVIEW_SCALE = args.count, args.preview_scale
+    ORIGINAL_DIR, PREVIEW_DIR = OUTPUT_DIR / "original_28x28", OUTPUT_DIR / "preview_280x280"
+    IMAGE_FILE, LABEL_FILE = (
+        DATA_DIR / "train-images-idx3-ubyte",
+        DATA_DIR / "train-labels-idx1-ubyte",
+    )
+    protect_evidence(OUTPUT_DIR)
     if not IMAGE_FILE.exists() or not LABEL_FILE.exists():
         raise FileNotFoundError(
-            "Fashion-MNIST IDX files were not found. "
-            "Run download_fashion_mnist.py first."
+            "Fashion-MNIST IDX files were not found. Run download_fashion_mnist.py first."
         )
 
     ORIGINAL_DIR.mkdir(parents=True, exist_ok=True)
@@ -115,9 +123,7 @@ def main():
 
         write_grayscale_png(original_path, columns, rows, pixels)
 
-        enlarged = enlarge_pixels(
-            pixels, columns, rows, PREVIEW_SCALE
-        )
+        enlarged = enlarge_pixels(pixels, columns, rows, PREVIEW_SCALE)
         write_grayscale_png(
             preview_path,
             columns * PREVIEW_SCALE,
@@ -137,10 +143,7 @@ def main():
             }
         )
 
-        print(
-            f"Saved index {index}: label {label_number} "
-            f"({class_name.replace('_', ' ')})"
-        )
+        print(f"Saved index {index}: label {label_number} ({class_name.replace('_', ' ')})")
 
     manifest_path = OUTPUT_DIR / "sample_manifest.csv"
     with manifest_path.open("w", newline="", encoding="utf-8") as file:
@@ -155,6 +158,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
-
-
+    run(main)

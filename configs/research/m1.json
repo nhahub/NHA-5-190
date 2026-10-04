@@ -1,0 +1,11 @@
+{
+  "schema_version": "wardiq.research.v1",
+  "download_fashion_mnist": {"output": "data/raw/fashion_mnist"},
+  "export_fashion_mnist_samples": {"data_dir": "data/raw/fashion_mnist", "output": "artifacts/m1/fashion_mnist", "count": 5, "preview_scale": 10},
+  "inspect_fashionpedia_samples": {"archive": "data/raw/fashionpedia/val_test2020.zip", "annotations": "data/raw/fashionpedia/instances_attributes_val2020.json", "output": "artifacts/m1/fashionpedia", "count": 5},
+  "extract_polyvore_samples": {"source": "data/raw/polyvore_outfits/disjoint/validation-00000-of-00001.parquet", "output": "artifacts/m1/polyvore_outfits", "count": 5},
+  "build_polyvore_check_report": {"source": "data/raw/polyvore_outfits/disjoint/validation-00000-of-00001.parquet", "metadata": "data/raw/polyvore_outfits/metadata.json", "validation": "data/raw/polyvore_outfits/disjoint/valid.json", "output": "artifacts/m1/polyvore_outfits"},
+  "build_raw_manifest": {"fashion_mnist": "data/raw/fashion_mnist", "fashionpedia_annotations": "data/raw/fashionpedia/instances_attributes_val2020.json", "polyvore_source": "data/raw/polyvore_outfits/disjoint/validation-00000-of-00001.parquet", "polyvore_metadata": "data/raw/polyvore_outfits/metadata.json", "polyvore_validation": "data/raw/polyvore_outfits/disjoint/valid.json", "output": "artifacts/m1/raw_manifest.csv"},
+  "validate_polyvore_original": {"source": "data/raw/polyvore_original", "categories": "data/raw/polyvore_original/category_id.txt"},
+  "compare_manifest": {"expected": "data/manifests/raw_manifest.csv", "generated": "artifacts/m1/raw_manifest.csv"}
+}

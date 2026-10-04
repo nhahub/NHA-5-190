@@ -1,14 +1,10 @@
-from pathlib import Path
 import gzip
 import hashlib
 import shutil
 import urllib.request
 
 # Official Fashion-MNIST files
-BASE_URL = (
-    "https://raw.githubusercontent.com/"
-    "zalandoresearch/fashion-mnist/master/data/fashion/"
-)
+BASE_URL = "https://raw.githubusercontent.com/zalandoresearch/fashion-mnist/master/data/fashion/"
 
 FILES = {
     "train-images-idx3-ubyte.gz": "8d4fb7e6c68d591d4c3dfef9ec88bf0d",
@@ -17,7 +13,9 @@ FILES = {
     "t10k-labels-idx1-ubyte.gz": "bb300cfdad3c16e7a12a480ee83cd310",
 }
 
-OUTPUT_DIR = Path("data/raw/fashion_mnist")
+from research_cli import ROOT, arguments, protect_evidence, run
+
+OUTPUT_DIR = ROOT / "data/raw/fashion_mnist"
 
 
 def calculate_md5(file_path):
@@ -38,8 +36,7 @@ def download_file(filename, expected_md5):
             print(f"Already downloaded and verified: {filename}")
             return destination
 
-        print(f"Existing file is invalid. Downloading again: {filename}")
-        destination.unlink()
+        raise RuntimeError(f"Existing file failed checksum; preserve it for review: {destination}")
 
     print(f"Downloading: {filename}")
     urllib.request.urlretrieve(BASE_URL + filename, destination)
@@ -47,11 +44,8 @@ def download_file(filename, expected_md5):
     actual_md5 = calculate_md5(destination)
 
     if actual_md5 != expected_md5:
-        destination.unlink()
         raise RuntimeError(
-            f"Checksum failed for {filename}\n"
-            f"Expected: {expected_md5}\n"
-            f"Received: {actual_md5}"
+            f"Checksum failed for {filename}\nExpected: {expected_md5}\nReceived: {actual_md5}"
         )
 
     print(f"Verified: {filename}")
@@ -75,6 +69,10 @@ def extract_file(compressed_path):
 
 
 def main():
+    global OUTPUT_DIR
+    args = arguments("download_fashion_mnist")
+    OUTPUT_DIR = args.output
+    protect_evidence(OUTPUT_DIR)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     print(f"Saving Fashion-MNIST to: {OUTPUT_DIR.resolve()}\n")
@@ -88,4 +86,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run(main)

@@ -6,19 +6,15 @@ import json
 import struct
 from collections import defaultdict
 from io import BytesIO
-from pathlib import Path
 
-import pyarrow.parquet as pq
-from PIL import Image
+from research_cli import ROOT, arguments, protect_evidence, require_files, run
 
-
-ROOT = Path(r"C:\Users\Hp\Documents\Codex\2026-09-21\n")
-OUT = ROOT / "outputs" / "WARDIQ_M1_Temporary_Handoff" / "data" / "manifests" / "raw_manifest.csv"
-FM_ROOT = Path(r"D:\projects\Test\data\raw\fashion_mnist")
-FP_JSON = Path(r"D:\projects\Test\data\raw\fashionpedia\instances_attributes_val2020.json")
-POLY_PARQUET = Path(r"C:\Users\Hp\Downloads\0000.parquet")
-POLY_METADATA = ROOT / "work" / "polyvore_meta" / "metadata.json"
-POLY_VALID = ROOT / "work" / "polyvore_meta" / "valid.json"
+OUT = ROOT / "artifacts/m1/raw_manifest.csv"
+FM_ROOT = ROOT / "data/raw/fashion_mnist"
+FP_JSON = ROOT / "data/raw/fashionpedia/instances_attributes_val2020.json"
+POLY_PARQUET = ROOT / "data/raw/polyvore_outfits/disjoint/validation-00000-of-00001.parquet"
+POLY_METADATA = ROOT / "data/raw/polyvore_outfits/metadata.json"
+POLY_VALID = ROOT / "data/raw/polyvore_outfits/disjoint/valid.json"
 
 FIELDS = [
     "item_id",
@@ -121,16 +117,21 @@ def fashionpedia_rows():
 
 
 def polyvore_rows():
+    import pyarrow.parquet as pq
+    from PIL import Image
+
     metadata = json.loads(POLY_METADATA.read_text(encoding="utf-8"))
     outfits = json.loads(POLY_VALID.read_text(encoding="utf-8"))
     memberships = defaultdict(list)
     for outfit in outfits:
         for item in outfit["items"]:
             memberships[item["item_id"]].append(f"{outfit['set_id']}:{item['index']}")
-    table = pq.read_table(POLY_PARQUET)
-    item_ids = table.column("item_id").to_pylist()
-    images = table.column("image").to_pylist()
-    for index, (item_id, image) in enumerate(zip(item_ids, images)):
+    batches = pq.ParquetFile(POLY_PARQUET).iter_batches(
+        batch_size=256, columns=["item_id", "image"]
+    )
+    rows = (row for batch in batches for row in batch.to_pylist())
+    for index, row in enumerate(rows):
+        item_id, image = row["item_id"], row["image"]
         meta = metadata.get(item_id, {})
         with Image.open(BytesIO(image["bytes"])) as loaded:
             width, height = loaded.size
@@ -156,6 +157,23 @@ def polyvore_rows():
 
 
 def main():
+    global OUT, FM_ROOT, FP_JSON, POLY_PARQUET, POLY_METADATA, POLY_VALID
+    args = arguments("build_raw_manifest")
+    OUT, FM_ROOT, FP_JSON = args.output, args.fashion_mnist, args.fashionpedia_annotations
+    POLY_PARQUET, POLY_METADATA, POLY_VALID = (
+        args.polyvore_source,
+        args.polyvore_metadata,
+        args.polyvore_validation,
+    )
+    require_files(
+        FP_JSON,
+        POLY_PARQUET,
+        POLY_METADATA,
+        POLY_VALID,
+        FM_ROOT / "train-labels-idx1-ubyte.gz",
+        FM_ROOT / "t10k-labels-idx1-ubyte.gz",
+    )
+    protect_evidence(OUT)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     counts = defaultdict(int)
     with OUT.open("w", encoding="utf-8-sig", newline="") as handle:
@@ -171,4 +189,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run(main)

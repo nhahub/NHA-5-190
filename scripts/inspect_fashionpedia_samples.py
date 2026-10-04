@@ -1,17 +1,17 @@
-from pathlib import Path
-from collections import defaultdict
 import csv
 import io
 import json
 import zipfile
+from collections import defaultdict
 
 from PIL import Image, ImageDraw, ImageFont
+from research_cli import ROOT, arguments, protect_evidence, run
 
-RAW_DIR = Path("data/raw/fashionpedia")
+RAW_DIR = ROOT / "data/raw/fashionpedia"
 ZIP_PATH = RAW_DIR / "val_test2020.zip"
 ANNOTATION_PATH = RAW_DIR / "instances_attributes_val2020.json"
 
-OUTPUT_DIR = Path("data/samples/fashionpedia/validation")
+OUTPUT_DIR = ROOT / "artifacts/m1/fashionpedia"
 ORIGINAL_DIR = OUTPUT_DIR / "original"
 ANNOTATED_DIR = OUTPUT_DIR / "annotated"
 SAMPLE_COUNT = 5
@@ -28,15 +28,16 @@ COLORS = [
 
 
 def safe_name(value):
-    return (
-        value.replace("/", "-")
-        .replace("\\", "-")
-        .replace(",", "")
-        .replace(" ", "_")
-    )
+    return value.replace("/", "-").replace("\\", "-").replace(",", "").replace(" ", "_")
 
 
 def main():
+    global ZIP_PATH, ANNOTATION_PATH, OUTPUT_DIR, ORIGINAL_DIR, ANNOTATED_DIR, SAMPLE_COUNT
+    args = arguments("inspect_fashionpedia_samples")
+    ZIP_PATH, ANNOTATION_PATH, OUTPUT_DIR = args.archive, args.annotations, args.output
+    SAMPLE_COUNT = args.count
+    ORIGINAL_DIR, ANNOTATED_DIR = OUTPUT_DIR / "original", OUTPUT_DIR / "annotated"
+    protect_evidence(OUTPUT_DIR)
     if not ZIP_PATH.exists() or not ANNOTATION_PATH.exists():
         raise FileNotFoundError(
             "Fashionpedia validation files are missing. "
@@ -158,10 +159,7 @@ def main():
                     }
                 )
 
-            annotated_name = (
-                f"sample_{sample_number:02d}_"
-                f"image_{image_record['id']}_annotated.jpg"
-            )
+            annotated_name = f"sample_{sample_number:02d}_image_{image_record['id']}_annotated.jpg"
             annotated_path = ANNOTATED_DIR / annotated_name
             image.save(annotated_path, quality=92)
 
@@ -218,5 +216,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
-
+    run(main)

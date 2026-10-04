@@ -20,7 +20,7 @@ The original Category/Attribute and retrieval subsets were considered for item c
 ## Polyvore evidence and size
 
 - **Access:** approved and downloaded on 2026-09-21.
-- **Local validation:** the disjoint validation parquet has 14,657 rows. Rows 0–4 were opened; image content matched the metadata category in all five cases, and every item had validation outfit membership. [Local report](../data/samples/polyvore_outfits/inspection_report.md)
+- **Local validation:** the disjoint validation parquet has 14,657 rows. Rows 0–4 were opened; image content matched the metadata category in all five cases, and every item had validation outfit membership. [Local report](../../data/samples/polyvore_outfits/inspection_report.md)
 - **Storage:** use **4.3 GB** for the current Hugging Face repack. [Current dataset page](https://huggingface.co/datasets/mvasil/polyvore-outfits)
 - **Why 6 GB also appeared:** the older fashion-compatibility README labels its historical download archive as 6G. [Older implementation README](https://github.com/mvasil/fashion-compatibility)
 - **Source separation:** list `xthan/polyvore-dataset` as the official source for the original Polyvore dataset. List `mvasil/polyvore-outfits` only in the Polyvore Outfits section. [Original Polyvore](https://github.com/xthan/polyvore-dataset) · [Polyvore Outfits](https://huggingface.co/datasets/mvasil/polyvore-outfits)

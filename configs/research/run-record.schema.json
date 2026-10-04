@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Successful research command record",
+  "type": "object",
+  "required": ["schema_version", "timestamp_utc", "command", "git_commit", "working_tree_dirty", "config_sha256", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "wardiq.research_run.v1"},
+    "timestamp_utc": {"type": "string", "format": "date-time"},
+    "command": {"type": "array", "items": {"type": "string"}},
+    "git_commit": {"type": ["string", "null"]},
+    "working_tree_dirty": {"type": ["boolean", "null"]},
+    "config_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "status": {"const": "succeeded"}
+  }
+}

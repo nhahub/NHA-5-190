@@ -29,11 +29,29 @@ flowchart LR
 ## Quick start
 
 ```powershell
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev,data]"
+python -m pip install -e ".[dev]"
 python scripts/validate_repository.py
-pytest
+python -m pytest
 ```
+
+Run these commands from the repository root using your normal Python interpreter.
+No virtual environment or activation is required. Python 3.10+ is declared; local
+baseline validation used Python 3.13.15. Other versions and dependency installation
+must pass clean-install checks before compatibility is considered verified.
+
+GitHub CI is configured to check Python 3.10, 3.11, and 3.12 on pull requests,
+pushes to `main` or `chore/repo-hardening`, and manual runs. See
+[CI checks and local commands](docs/CI.md) for scope and current verification limits.
+
+For dataset download and inspection scripts, add the data dependencies:
+
+```powershell
+python -m pip install -e ".[data]"
+```
+
+Research scripts accept portable input paths; see [reproduction commands](docs/REPRODUCIBILITY.md)
+for required raw files and verified checks. Repository validation does not require
+raw downloads. Use `python scripts/tasks.py samples` for committed-sample checks.
 
 Install the optional ML stack only when model work begins:
 
@@ -67,6 +85,11 @@ python -m pip install -e ".[ml]"
 | Asmaa Tamer | Evaluation, documentation, and integration |
 
 Detailed weekly assignments are in [team ownership](docs/team/OWNERSHIP.md).
+Milestone input/output requirements and review evidence are described in the
+[handoff checklist](docs/HANDOFFS.md). The current milestone pages describe planned
+work and explicit acceptance status; infrastructure checks do not complete team tasks.
+See [draft shared types](docs/CONTRACTS.md) and [review routing](docs/team/REVIEWERS.md)
+for interface agreement and blocked-dependency coordination.
 
 ## Collaboration rules
 

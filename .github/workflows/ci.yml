@@ -3,26 +3,43 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, chore/repo-hardening]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  validate:
+  quality:
+    name: Quality (Python ${{ matrix.python }})
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python }}
           cache: pip
+          cache-dependency-path: pyproject.toml
       - name: Install development dependencies
         run: python -m pip install -e ".[dev]"
-      - name: Validate repository contracts
-        run: python scripts/validate_repository.py
-      - name: Lint
-        run: ruff check src tests scripts/validate_repository.py
-      - name: Test
-        run: pytest
+      - name: Lint shared code
+        run: python scripts/tasks.py lint
+      - name: Check shared-code formatting
+        run: python scripts/tasks.py format-check
+      - name: Check package types
+        run: python scripts/tasks.py typecheck
+      - name: Test infrastructure
+        run: python scripts/tasks.py test
+      - name: Validate structure, manifest, and artifact policy
+        run: python scripts/tasks.py validate
+      - name: Check local documentation links
+        run: python scripts/tasks.py links

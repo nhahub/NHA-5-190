@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
@@ -14,10 +15,16 @@ if str(SRC) not in sys.path:
 from wardiq.data import validate_manifest  # noqa: E402
 
 REQUIRED_PATHS = (
-    "README.md", "CONTRIBUTING.md", "pyproject.toml", "data/README.md",
-    "data/manifests/raw_manifest.csv", "docs/proposal/PROJECT_PROPOSAL.md",
-    "docs/architecture/system-overview.md", "docs/team/OWNERSHIP.md",
-    "docs/milestones/M1.md", ".github/workflows/ci.yml",
+    "README.md",
+    "CONTRIBUTING.md",
+    "pyproject.toml",
+    "data/README.md",
+    "data/manifests/raw_manifest.csv",
+    "docs/proposal/PROJECT_PROPOSAL.md",
+    "docs/architecture/system-overview.md",
+    "docs/team/OWNERSHIP.md",
+    "docs/milestones/M1.md",
+    ".github/workflows/ci.yml",
 )
 
 
@@ -32,7 +39,9 @@ def main() -> int:
     print(f"Repository structure: OK ({len(REQUIRED_PATHS)} required paths)")
     print(f"Manifest: {report.rows:,} rows, {report.unique_item_ids:,} unique IDs")
     print(f"Datasets: {', '.join(report.datasets)}")
-    return 0
+    return subprocess.run(
+        [sys.executable, str(ROOT / "scripts/check_artifacts.py")], cwd=ROOT, check=False
+    ).returncode
 
 
 if __name__ == "__main__":

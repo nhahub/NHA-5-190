@@ -1,0 +1,30 @@
+# Optional: install .[dev] with normal Python before running these hooks.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: Ruff shared-code lint
+        entry: python -m ruff check
+        language: system
+        types: [python]
+        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts|research_cli|check_research_samples|compare_manifest|check_links)\.py$)
+      - id: ruff-format
+        name: Ruff shared-code format check
+        entry: python -m ruff format --check
+        language: system
+        types: [python]
+        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts|research_cli|check_research_samples|compare_manifest|check_links)\.py$)
+      - id: artifact-policy
+        name: Repository artifact policy (exact staged content)
+        entry: python scripts/check_artifacts.py --staged
+        language: system
+        pass_filenames: false
+        always_run: true
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+        exclude: ^(data/|docs/decisions/|docs/milestones/M1-data-handoff\.md$)
+      - id: trailing-whitespace
+        exclude: ^(data/|docs/decisions/|docs/milestones/M1-data-handoff\.md$)
+      - id: detect-private-key
