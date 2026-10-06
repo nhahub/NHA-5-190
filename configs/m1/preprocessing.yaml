@@ -1,0 +1,22 @@
+image_size: [224, 224]
+interpolation: bilinear
+color_mode: RGB
+
+normalization:
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+
+train:
+  random_horizontal_flip: true
+  horizontal_flip_probability: 0.5
+
+eval:
+  random_horizontal_flip: false
+
+missingness:
+  missing_attributes_are_not_negative: true
+  missing_category_is_not_inferred: true
+
+test_policy:
+  source_of_truth: data/manifests/split_manifest.csv
+  never_infer_or_create_test_rows: true
