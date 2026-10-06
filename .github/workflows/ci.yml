@@ -39,7 +39,29 @@ jobs:
         run: python scripts/tasks.py typecheck
       - name: Test infrastructure
         run: python scripts/tasks.py test
+      - name: Reproduce manifest-only clean handoff
+        run: python scripts/tasks.py clean-manifest
+      - name: Check manifest reference duplication
+        run: python scripts/tasks.py duplicates
       - name: Validate structure, manifest, and artifact policy
         run: python scripts/tasks.py validate
       - name: Check local documentation links
         run: python scripts/tasks.py links
+
+  samples:
+    name: M1 source samples
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install data inspection dependencies
+        run: python -m pip install -e ".[data]"
+      - name: Decode independent source samples
+        run: python scripts/tasks.py m1-images
+      - name: Check sample traceability and dimensions
+        run: python scripts/tasks.py samples

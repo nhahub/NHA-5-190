@@ -20,6 +20,8 @@ python scripts/tasks.py typecheck
 python scripts/tasks.py test
 python scripts/tasks.py validate
 python scripts/tasks.py links
+python scripts/tasks.py clean-manifest
+python scripts/tasks.py duplicates
 ```
 
 Lint and formatting cover shared package code, tests, and the validation helpers
@@ -30,7 +32,13 @@ teammate implementation and model evaluation remain their owners' work.
 Repository validation checks required paths, the raw manifest, and the artifact
 policy (including selected secret patterns). This is not a full secret scanner or
 dataset license review. Data-bearing sample checks are a separate local command
-with `.[data]`; they are not included in the dependency-light CI job.
+with `.[data]`. The separate `M1 source samples` job installs that extra on Python
+3.11 and checks decoding, traceability and dimensions. It downloads no raw dataset.
+
+The quality matrix also regenerates the manifest-only clean output and checks
+reference duplication. Generated files stay ignored. These checks do not accept
+full image coverage, garment geometry, cross-dataset taxonomy or product-level
+leakage. See the [runnable M1 quality handoff](m1/quality-handoff.md).
 
 ## Documentation links
 
