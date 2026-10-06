@@ -159,6 +159,8 @@ class WardiqImageDataset:
     ):
         self.df = manifest[manifest.target_split.eq(split)].reset_index(drop=True).copy()
 
+        self.transform_config: dict[str, Any] | None = None
+
         if transform is None:
             self.transform, self.transform_config = build_transforms(
                 train=(split == "train"),
@@ -166,7 +168,6 @@ class WardiqImageDataset:
             )
         else:
             self.transform = transform
-            self.transform_config = None
 
         self.strict_paths = strict_paths
         self.image_root = Path(image_root) if image_root is not None else None
@@ -249,6 +250,8 @@ class WardiqGarmentDataset:
 
         self.df = df.reset_index(drop=True)
 
+        self.transform_config: dict[str, Any] | None = None
+
         if transform is None:
             self.transform, self.transform_config = build_transforms(
                 train=(split == "train"),
@@ -256,7 +259,6 @@ class WardiqGarmentDataset:
             )
         else:
             self.transform = transform
-            self.transform_config = None
 
         self.image_root = Path(image_root) if image_root is not None else None
 
@@ -350,7 +352,10 @@ class WardiqGarmentDataset:
             "source_category_id": (None if _is_missing(category_id) else int(category_id)),
             "source_category_label": category_label,
             "common_category": common_category,
-            "category_mapping_status": _row_value(row, "category_mapping_status"),
+            "category_mapping_status": _row_value(
+                row,
+                "category_mapping_status",
+            ),
             "crop_method": crop_method,
             "fallback_used": bool(_row_value(row, "fallback_used", False)),
             "bounding_box_format": ("xywh" if bbox is not None else None),
