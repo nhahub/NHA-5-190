@@ -78,11 +78,7 @@ class WardiqImageDataset:
 
     def __init__(self, manifest: Any, split: str, transform: Any = None, strict_paths: bool = True):
 
-        self.df = (
-            manifest[manifest.target_split.eq(split)]
-            .reset_index(drop=True)
-            .copy()
-        )
+        self.df = manifest[manifest.target_split.eq(split)].reset_index(drop=True).copy()
         self.transform = transform or build_transforms(train=(split == "train"))
         self.strict_paths = strict_paths
 
@@ -126,9 +122,7 @@ class WardiqImageDataset:
             "source_category_ids": source_ids,
             "source_category_labels": category_labels,
             "common_categories": common_categories,
-            "direct_common_categories": _parse_list(
-                _row_value(row, "direct_common_categories")
-            ),
+            "direct_common_categories": _parse_list(_row_value(row, "direct_common_categories")),
             "attribute_ids": attributes,
             "group_id": (
                 None
@@ -143,8 +137,7 @@ class WardiqGarmentDataset:
 
     def __init__(self, garment_manifest: Any, split: str, transform: Any = None):
         df = garment_manifest[
-            garment_manifest.target_split.eq(split)
-            & garment_manifest.usable_derivative.eq(True)
+            garment_manifest.target_split.eq(split) & garment_manifest.usable_derivative.eq(True)
         ].copy()
         self.df = df.reset_index(drop=True)
         self.transform = transform or build_transforms(train=(split == "train"))
