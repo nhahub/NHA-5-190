@@ -1,0 +1,72 @@
+# M1 garment preparation config — Hana
+# Source geometry formats, coordinate conventions and the deterministic fallback policy.
+# Consumed by scripts/prepare_garment_crops.py
+
+version: "0.1.0"
+status: prototype_on_eyad_samples   # full run needs Ziad's clean manifest + full images (blocked, see report)
+
+taxonomy_ref: configs/m1/taxonomy.json   # used to skip Fashionpedia "part"/"decoration" categories (not standalone garments)
+
+sources:
+  fashionpedia:
+    manifest: data/manifests/fashionpedia_validation_sample_manifest.csv
+    image_root: data/samples/fashionpedia/original
+    geometry:
+      box_format: xywh_absolute_pixels     # [x_min, y_min, width, height], origin top-left, source image pixel space
+      box_source_field: bbox_xywh
+      mask_available_field: segmentation_present   # boolean only; RLE/polygon coordinates are not in this manifest, only in the official annotation JSON
+      mask_format_if_present: coco_rle_or_polygon  # documented from the official Fashionpedia release; not verified locally, see report
+    crop_policy:
+      method: bbox_crop
+      unit: main_apparel_annotation   # one crop per annotation whose category is a main garment (taxonomy source_role == main_apparel)
+      skip_categories: parts_and_decorations   # taxonomy source_role in {part, decoration}; recorded, not cropped
+      padding_px: 0
+      clamp_to_image_bounds: true
+    fallback:
+      trigger: "bbox missing, non-numeric, zero/negative width or height, or fully outside image bounds after clamping"
+      action: retain_full_image
+      flag_field: fallback_used
+      reason_field: fallback_reason
+
+  polyvore_outfits:
+    manifest: data/samples/polyvore_outfits/five_item_manifest.csv
+    image_root: data/samples/polyvore_outfits
+    geometry:
+      box_format: none                 # source images are already single-item product photos; no bbox/mask ships with the handoff
+      mask_available_field: null
+    crop_policy:
+      method: full_image_source_precropped   # the source item photo IS the garment crop; no further cropping in M1
+      unit: item
+    fallback:
+      trigger: not_applicable   # every item lacks geometry by design of the source, this is not a missing-annotation case
+      action: retain_full_image
+      flag_field: fallback_used
+      reason_field: fallback_reason
+
+  fashion_mnist:
+    manifest: data/manifests/fashion_mnist_sample_manifest.csv
+    image_root: data/samples/fashion_mnist
+    geometry:
+      box_format: none
+      mask_available_field: null
+    crop_policy:
+      method: full_image_no_geometry
+      unit: item
+      scope: smoke_test_only   # per taxonomy.json; not used for garment-specific downstream tasks
+    fallback:
+      trigger: "no bbox/mask ships with this source"
+      action: retain_full_image
+      flag_field: fallback_used
+      reason_field: fallback_reason
+    known_issue:
+      description: "Sample manifest points to original_28x28/ and preview_280x280/ subfolders that are not present in this handoff package. Only flat 280x280 PNGs (upscaled 10x from the native 28x28 for viewing) are included."
+      impact: "Crops in this prototype run are made from the 280x280 preview file, not the native 28x28 pixels. image_size_source=preview_upscaled and resize_scale=0.1 are recorded per row so downstream code can rescale back to native resolution."
+      owner: Eyad
+
+resize_policy:
+  m1_default: none   # crops are saved at native/clamped source resolution; no resizing performed in this task
+  note: "If a later step resizes a crop, it must record scale_x/scale_y or the new geometry against processed_bbox_xywh so source and processed geometry stay distinguishable, per the task's own requirement."
+
+output:
+  manifest_path: data/manifests/garment_manifest.csv
+  crops_root: data/derived/garment_crops
