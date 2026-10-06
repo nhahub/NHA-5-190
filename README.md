@@ -13,6 +13,9 @@ Milestone 1 data foundation is ready for team review. The repository includes a 
 
 Start with [the M1 handoff](docs/milestones/M1-data-handoff.md), [data instructions](data/README.md), and [dataset decisions](docs/decisions/dataset-selection.md).
 
+Ziad's archive-based handoff now has [runnable quality commands](docs/m1/quality-handoff.md).
+Generate the clean manifest locally rather than extracting the ZIP over this repository.
+
 ## System flow
 
 ```mermaid

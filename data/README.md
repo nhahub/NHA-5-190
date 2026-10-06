@@ -25,6 +25,12 @@ data/
 
 ## Manifest rule
 
+For the reviewed manifest-only clean output, run the
+[M1 quality handoff](../docs/m1/quality-handoff.md). Its default path is
+`artifacts/m1/quality/clean_manifest.csv`, not a committed large CSV. The preserved
+raw Fashionpedia ID/name lists are independent sets; resolve names by source ID
+instead of pairing those raw lists by position.
+
 The row unit is **one row per image**. Object annotations remain linked through `annotation_ids` and `annotation_reference`; this avoids duplicating image rows when an image has several garments or garment parts.
 
 - Fashion-MNIST has no filenames or external source IDs. Its stable ID is generated as `fashion_mnist_<split>_<zero-padded-index>` and the split/index must be preserved.

@@ -18,6 +18,10 @@ SCOPE = [
     "scripts/check_research_samples.py",
     "scripts/compare_manifest.py",
     "scripts/check_links.py",
+    "scripts/prepare_clean_manifest.py",
+    "scripts/check_manifest_duplicates.py",
+    "scripts/validate_m1_images.py",
+    "scripts/inspect_m1_manifest.py",
 ]
 
 
@@ -34,6 +38,10 @@ def main() -> int:
         "artifacts": ["scripts/check_artifacts.py"],
         "samples": ["scripts/check_research_samples.py"],
         "links": ["scripts/check_links.py"],
+        "clean-manifest": ["scripts/prepare_clean_manifest.py"],
+        "duplicates": ["scripts/check_manifest_duplicates.py"],
+        "m1-images": ["scripts/validate_m1_images.py"],
+        "m1-eda": ["scripts/inspect_m1_manifest.py"],
     }
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("task", choices=commands)
