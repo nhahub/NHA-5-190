@@ -106,6 +106,9 @@ def test_sample_pipeline_outputs_load_in_pytorch(tmp_path):
     assert len(frame) == 56
     assert frame.usable_derivative.sum() == 23
     assert (frame.target_split == frame.source_target_split).all()
+    assignments = pd.read_csv(ROOT / "data/manifests/split_manifest.csv").set_index("item_id")
+    for row in frame.itertuples():
+        assert row.target_split == assignments.loc[row.omar_join_key, "target_split"]
     for split, count in [("train", 5), ("validation", 18)]:
         dataset = WardiqGarmentDataset(frame, split, image_root=ROOT)
         assert len(dataset) == count

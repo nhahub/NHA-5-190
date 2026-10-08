@@ -1,5 +1,15 @@
 # M1 Split Report
 
+> Integration note (2026-10-08): PR #10 delivered the canonical split manifest,
+> configuration and this report. The evaluation manifest described below was
+> not included in that merge. Run `python scripts/tasks.py splits` to verify
+> the 85,815 assignments and generate the test-only export at
+> `artifacts/m1/splits/evaluation_manifest.csv` with its own checksum report.
+> Sample garment derivatives now inherit canonical assignments through
+> `omar_join_key`. The original delivery claims below remain historical;
+> the generated export does not establish the missing file's reported checksum
+> or full-image availability. See [the current pipeline](m1/run_pipeline.md).
+
 ## 1. Overview
 
 This report documents the reproducible train/validation/test split process for the WARDIQ M1 data foundation.

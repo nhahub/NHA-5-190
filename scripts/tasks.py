@@ -25,6 +25,7 @@ SCOPE = [
     "scripts/apply_taxonomy.py",
     "scripts/prepare_garment_crops.py",
     "scripts/extract_color_palettes.py",
+    "scripts/validate_m1_splits.py",
 ]
 
 
@@ -44,6 +45,7 @@ def main() -> int:
         "clean-manifest": ["scripts/prepare_clean_manifest.py"],
         "duplicates": ["scripts/check_manifest_duplicates.py"],
         "m1-images": ["scripts/validate_m1_images.py"],
+        "splits": ["scripts/validate_m1_splits.py"],
         "taxonomy": ["scripts/apply_taxonomy.py"],
         "colors": ["scripts/extract_color_palettes.py"],
         "garments": ["scripts/prepare_garment_crops.py"],

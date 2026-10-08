@@ -50,3 +50,10 @@ class ArtifactPolicyTests(unittest.TestCase):
         lf = path.read_bytes().replace(b"\r\n", b"\n")
         for content in (lf, lf.replace(b"\n", b"\r\n")):
             self.assertEqual(ARTIFACTS.inspect_artifact(ARTIFACTS.MANIFEST_PATH, content), [])
+
+    def test_delivered_splits_allow_only_exact_lf_or_crlf_content(self) -> None:
+        path = Path(__file__).parents[1] / ARTIFACTS.SPLIT_PATH
+        lf = path.read_bytes().replace(b"\r\n", b"\n")
+        for content in (lf, lf.replace(b"\n", b"\r\n")):
+            self.assertEqual(ARTIFACTS.inspect_artifact(ARTIFACTS.SPLIT_PATH, content), [])
+        self.assertTrue(ARTIFACTS.inspect_artifact(ARTIFACTS.SPLIT_PATH, lf + b"changed\n"))

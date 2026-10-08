@@ -1,5 +1,9 @@
 # M1 merged-code integration verification
 
+> This records the earlier PR #8 review. For the checkout after merging Omar's
+> canonical splits and Eyad's M2 color component, see
+> [the updated M1/M2 pull verification](M1_M2_PULL_VERIFICATION.md).
+
 Date: 2026-10-08. Reviewed checkout: `main` at `84b97fe`, including Asmaa's
 taxonomy PR #7, Hana's garment PR #6 and Hayat's loader fixes PR #5.
 The fixes described here are local working-tree changes.

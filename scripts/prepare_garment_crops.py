@@ -26,6 +26,7 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).parent))
 from apply_taxonomy import load_taxonomy, map_category  # noqa: E402
 from research_cli import protect_evidence  # noqa: E402
+from validate_m1_splits import load_assignments, outfit_groups  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 ROLE = "source_role"
@@ -195,11 +196,12 @@ def main():
     out_root = ROOT / cfg["output"]["crops_root"]
     for output in cfg["output"].values():
         protect_evidence(ROOT / output)
-    # Preserve delivered project splits; never invent test membership from source splits.
+    # Sample identity evidence locates each source; canonical assignments set its split.
     reference = pd.read_csv(ROOT / cfg["split_reference"], dtype=str, keep_default_na=False)
     if reference.item_id.duplicated().any():
         raise ValueError("Split reference contains duplicate item IDs")
     split_lookup = reference.set_index("item_id").to_dict("index")
+    assignments = load_assignments(ROOT / cfg["canonical_split_manifest"])
     rows = crop_fashionpedia(cfg["sources"]["fashionpedia"], tax, out_root)
     rows += full_image_source(
         cfg["sources"]["polyvore_outfits"],
@@ -240,16 +242,23 @@ def main():
         identity = split_lookup.get(
             candidates[0] if row["source_dataset"] == "Polyvore Outfits" else original_id, {}
         )
-        if not identity.get("source_target_split"):
-            raise ValueError(f"Missing delivered target split for {original_id}")
-        row["target_split"] = identity.get("source_target_split", "")
+        join_key = identity.get("omar_join_key", "")
+        if join_key not in assignments:
+            raise ValueError(f"Missing canonical split assignment for {original_id}")
+        assignment = assignments[join_key]
+        if assignment["source_dataset"] != row["source_dataset"]:
+            raise ValueError(f"Canonical source dataset mismatch for {original_id}")
+        row["target_split"] = assignment["target_split"]
         row["source_target_split"] = row["target_split"]
-        row["group_id"] = identity.get("leakage_group_id", "")
+        row["split_assignment_file"] = cfg["canonical_split_manifest"]
+        row["split_method"] = assignment["split_method"]
+        row["split_random_seed"] = assignment["random_seed"]
+        row["group_id"] = assignment["group_id"]
         row["leakage_group_id"] = row["group_id"]
         if row["source_dataset"] == "Polyvore Outfits":
-            row["group_id"] = row["group_id"].split(":")[0]
+            row["group_id"] = ";".join(sorted(outfit_groups(row["group_id"])))
             row["leakage_group_id"] = row["group_id"]
-        row["omar_join_key"] = identity.get("omar_join_key", "")
+        row["omar_join_key"] = join_key
         row["usable_derivative"] = bool(row["output_path"])
         row["image_path"] = row["output_path"]
         if row["source_dataset"] == "Fashion-MNIST":

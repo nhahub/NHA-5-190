@@ -20,7 +20,7 @@ Neither mode audits previous Git history or establishes dataset usage rights.
 - Allow only empty `data/raw/.gitkeep` and `data/processed/.gitkeep` placeholders.
 - Reject model-weight, private-key, and compiled-bytecode extensions.
 - Reject local `.env` files while allowing the documented `.env.example`.
-- Reject files over 5 MiB except the exact existing raw manifest.
+- Reject files over 5 MiB except the exact existing raw and canonical split manifests.
 - Recognize private-key markers and GitHub/AWS token patterns; output only file
   paths and violation names, never matched credential values.
 
@@ -28,6 +28,11 @@ Neither mode audits previous Git history or establishes dataset usage rights.
 SHA-256 of its LF-normalized content. This permits Windows CRLF and Git/Linux LF
 representations of the same inventory. A future manifest change requires review
 and an explicit policy update; it cannot use the exception silently.
+
+`data/manifests/split_manifest.csv` from Omar's merged PR #10 is also protected
+by its LF-normalized SHA-256 (`7fecce57a5e61d6e433d9c7c1e1661bed1258b0d7362e833fbd41063a455f93f`).
+This narrowly allows the delivered 85,815 assignments (7.88 MB in this Windows
+checkout); other large CSVs and changed assignments still fail the check.
 
 The validator still checks record schema and unique IDs independently. Neither
 the checksum nor a valid reference establishes that all raw files exist on a

@@ -12,6 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 MAX_BYTES = 5 * 1024 * 1024
 MANIFEST_PATH = "data/manifests/raw_manifest.csv"
 MANIFEST_SHA256 = "84135923763f5fec09471435c0f292730ac19715e6c491d16aceea17f6cca99e"
+SPLIT_PATH = "data/manifests/split_manifest.csv"
+SPLIT_SHA256 = "7fecce57a5e61d6e433d9c7c1e1661bed1258b0d7362e833fbd41063a455f93f"
 BLOCKED_DIRS = {
     "data/raw",
     "data/processed",
@@ -62,10 +64,11 @@ def inspect_artifact(path: str, content: bytes) -> list[str]:
     name = posix.name.lower()
     if name != ".env.example" and (name == ".env" or name.startswith(".env.")):
         issues.append("local environment file")
-    if path == MANIFEST_PATH:
+    if path in {MANIFEST_PATH, SPLIT_PATH}:
         # Git stores LF while Windows may check out CRLF. Protect the same logical file.
         digest = hashlib.sha256(content.replace(b"\r\n", b"\n")).hexdigest()
-        if digest != MANIFEST_SHA256:
+        expected = MANIFEST_SHA256 if path == MANIFEST_PATH else SPLIT_SHA256
+        if digest != expected:
             issues.append("existing manifest changed; explicit reviewed policy update required")
     elif len(content) > MAX_BYTES:
         issues.append("file exceeds 5 MiB")

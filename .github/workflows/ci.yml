@@ -41,6 +41,8 @@ jobs:
         run: python scripts/tasks.py test
       - name: Reproduce manifest-only clean handoff
         run: python scripts/tasks.py clean-manifest
+      - name: Verify canonical splits and test-only evaluation inventory
+        run: python scripts/tasks.py splits
       - name: Verify taxonomy coverage
         run: python scripts/tasks.py taxonomy
       - name: Check manifest reference duplication

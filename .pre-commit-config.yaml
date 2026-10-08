@@ -7,13 +7,13 @@ repos:
         entry: python -m ruff check
         language: system
         types: [python]
-        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts|research_cli|check_research_samples|compare_manifest|check_links|prepare_clean_manifest|check_manifest_duplicates|validate_m1_images|inspect_m1_manifest|apply_taxonomy|prepare_garment_crops|extract_color_palettes)\.py$)
+        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts|research_cli|check_research_samples|compare_manifest|check_links|prepare_clean_manifest|check_manifest_duplicates|validate_m1_images|validate_m1_splits|inspect_m1_manifest|apply_taxonomy|prepare_garment_crops|extract_color_palettes)\.py$)
       - id: ruff-format
         name: Ruff shared-code format check
         entry: python -m ruff format --check
         language: system
         types: [python]
-        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts|research_cli|check_research_samples|compare_manifest|check_links|prepare_clean_manifest|check_manifest_duplicates|validate_m1_images|inspect_m1_manifest|apply_taxonomy|prepare_garment_crops|extract_color_palettes)\.py$)
+        files: ^(src/|tests/|scripts/(tasks|validate_repository|check_artifacts|research_cli|check_research_samples|compare_manifest|check_links|prepare_clean_manifest|check_manifest_duplicates|validate_m1_images|validate_m1_splits|inspect_m1_manifest|apply_taxonomy|prepare_garment_crops|extract_color_palettes)\.py$)
       - id: artifact-policy
         name: Repository artifact policy (exact staged content)
         entry: python scripts/check_artifacts.py --staged

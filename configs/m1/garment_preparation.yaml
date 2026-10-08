@@ -72,5 +72,6 @@ output:
   image_manifest_path: artifacts/m1/sample_image_manifest.csv
   crops_root: data/processed/garment_crops
 
-# Delivered split metadata, retained as evidence until Omar supplies canonical splits.
+# Historical sample identities bridge garment annotations to canonical source-image IDs.
 split_reference: data/manifests/garment_manifest.csv
+canonical_split_manifest: data/manifests/split_manifest.csv
