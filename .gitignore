@@ -34,3 +34,6 @@ mlruns/
 tmp/
 temp/
 *.tmp
+
+.local-check-tools/
+data/derived/
