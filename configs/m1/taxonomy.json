@@ -1,0 +1,762 @@
+{
+  "taxonomy_version": "1.0.0",
+  "status": "finalized_by_task_owner_pending_lead_review",
+  "created": "2026-09-23",
+  "note": "Early output of the taxonomy task. Not a verified M1 result. Source IDs and labels are always preserved next to the common category. | v1.0.0: the 6 ambiguous/unmapped Fashionpedia categories (cardigan, vest, watch, leg warmer, tights/stockings, sock) were decided directly by the task owner on 2026-09-27 without waiting for Project Lead review, since downstream work had already built on the draft. Reasoning for each is in its category_map note and in reports/m1/taxonomy_decisions.md.",
+  "inputs": {
+    "handoff_package": "WARDIQ_M1_Temporary_Handoff_updated",
+    "manifest": "data/manifests/clean_manifest.csv",
+    "manifest_rows": 85815,
+    "observed_label_scope": "Fashion-MNIST train/test, Fashionpedia validation, Polyvore Outfits disjoint validation"
+  },
+  "missing_value_policy": {
+    "json_python": "Unavailable values are null. Never use empty string, 'unknown', 0 or false for a missing value.",
+    "csv": "Unavailable values are empty cells, with a companion <field>_status column.",
+    "status_values": {
+      "present": "Value exists in the source for this record.",
+      "unavailable_in_source": "The source dataset does not define this field at all.",
+      "not_annotated": "The source defines the field but this record has no value. This is unknown, not a negative.",
+      "not_verified": "Documented by the source but not checked locally."
+    },
+    "rules": [
+      "A missing attribute is never a confirmed negative.",
+      "An empty Fashionpedia attribute_ids list is attributes=null with attributes_status=not_annotated.",
+      "Polyvore and Fashion-MNIST attributes are attributes=null with attributes_status=unavailable_in_source.",
+      "A category with no common mapping keeps its source id/label and gets common_category=null; the mapping_status says why.",
+      "Fashionpedia manifest category_ids and category_labels are separate image-level sets and are NOT positionally aligned. Look labels up by id."
+    ]
+  },
+  "mapping_status_values": {
+    "direct": "Same concept in source and common vocabulary.",
+    "approximate": "Close but not identical (subset, catch-all or coarser group). Usable, flagged.",
+    "ambiguous": "Provisional placement; alternatives listed. Needs review before training use.",
+    "unmapped": "Source label exists; no common category yet.",
+    "not_a_garment": "Fashionpedia part or decoration; not a standalone garment."
+  },
+  "downstream_rule": "Default use: mapping_status in {direct, approximate}. Strict use: direct only. Ambiguous, unmapped and not_a_garment records keep their source label and are excluded from common-category tasks unless the task owner opts in.",
+  "common_categories": {
+    "top": "Shirts, blouses, t-shirts, sweaters, pullovers",
+    "bottom": "Pants, trousers, shorts, skirts",
+    "one_piece": "Dresses, jumpsuits and other single-piece body garments",
+    "outerwear": "Jackets, coats, capes, vests",
+    "footwear": "Shoes, sandals, sneakers, boots",
+    "bag": "Bags and wallets",
+    "headwear": "Hats, headbands, head coverings",
+    "eyewear": "Glasses and sunglasses",
+    "scarf": "Scarves",
+    "jewellery": "Jewellery",
+    "accessory_other": "Other accessories (belt, tie, glove, watch, umbrella, unspecified accessories)"
+  },
+  "sources": {
+    "fashion_mnist": {
+      "manifest_source_dataset": "Fashion-MNIST",
+      "scope": "smoke_test_only",
+      "label_level": "image",
+      "geometry": "none",
+      "attributes_status": "unavailable_in_source",
+      "category_map": [
+        {
+          "source_id": 0,
+          "source_label": "T-shirt/top",
+          "common_category": "top",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": 1,
+          "source_label": "Trouser",
+          "common_category": "bottom",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": 2,
+          "source_label": "Pullover",
+          "common_category": "top",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": 3,
+          "source_label": "Dress",
+          "common_category": "one_piece",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": 4,
+          "source_label": "Coat",
+          "common_category": "outerwear",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": 5,
+          "source_label": "Sandal",
+          "common_category": "footwear",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": 6,
+          "source_label": "Shirt",
+          "common_category": "top",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": 7,
+          "source_label": "Sneaker",
+          "common_category": "footwear",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": 8,
+          "source_label": "Bag",
+          "common_category": "bag",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": 9,
+          "source_label": "Ankle boot",
+          "common_category": "footwear",
+          "mapping_status": "direct"
+        }
+      ],
+      "note": "Use only for loader/preprocessing checks. The manifest label is 'T-shirt/top'; sample file names replace the slash."
+    },
+    "fashionpedia": {
+      "manifest_source_dataset": "Fashionpedia",
+      "scope": "provisional_primary_garment_source",
+      "label_level": "annotation (image-level sets in manifest)",
+      "geometry": "bbox+segmentation on validation annotations",
+      "attributes_status": "not_annotated when attribute_ids is empty",
+      "attribute_note": "294 documented attributes, ids observed 0-340 (268 distinct in the validation manifest), 59.89% of validation annotations carry at least one. Only 35 attribute names are verified locally (sample manifest); the full id-to-name list must come from the official JSON. No common attribute vocabulary in M1.",
+      "id_verification": "Category id-to-name table matches the category sets of all 1,158 manifest images and all 46 sample annotations. Re-verify against the official JSON 'categories' when available.",
+      "category_map": [
+        {
+          "source_id": 0,
+          "source_label": "shirt, blouse",
+          "common_category": "top",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 1,
+          "source_label": "top, t-shirt, sweatshirt",
+          "common_category": "top",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 2,
+          "source_label": "sweater",
+          "common_category": "top",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 3,
+          "source_label": "cardigan",
+          "common_category": "top",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel",
+          "note": "Finalized without waiting on lead sign-off (team decision, 2026-09-27): grouped with its closest sibling, 'sweater' (id 2, direct->top). A cardigan is a knit top worn open; treated as top, not outerwear, since it is not a distinct weatherproofing/layering garment like jacket/coat."
+        },
+        {
+          "source_id": 4,
+          "source_label": "jacket",
+          "common_category": "outerwear",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 5,
+          "source_label": "vest",
+          "common_category": "outerwear",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel",
+          "note": "Finalized (2026-09-27): kept as outerwear. A vest is sleeveless and functions as a layering piece over a top (padded vest, suit vest, puffer vest), same functional role as jacket/coat (both direct->outerwear), not as a base layer."
+        },
+        {
+          "source_id": 6,
+          "source_label": "pants",
+          "common_category": "bottom",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 7,
+          "source_label": "shorts",
+          "common_category": "bottom",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 8,
+          "source_label": "skirt",
+          "common_category": "bottom",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 9,
+          "source_label": "coat",
+          "common_category": "outerwear",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 10,
+          "source_label": "dress",
+          "common_category": "one_piece",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 11,
+          "source_label": "jumpsuit",
+          "common_category": "one_piece",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 12,
+          "source_label": "cape",
+          "common_category": "outerwear",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 13,
+          "source_label": "glasses",
+          "common_category": "eyewear",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 14,
+          "source_label": "hat",
+          "common_category": "headwear",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 15,
+          "source_label": "headband, head covering, hair accessory",
+          "common_category": "headwear",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel",
+          "note": "Hair accessories could also be accessory_other."
+        },
+        {
+          "source_id": 16,
+          "source_label": "tie",
+          "common_category": "accessory_other",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 17,
+          "source_label": "glove",
+          "common_category": "accessory_other",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 18,
+          "source_label": "watch",
+          "common_category": "jewellery",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel",
+          "note": "Finalized (2026-09-27): moved from accessory_other to jewellery. Watches are worn and reasoned about like other body-worn jewellery (bracelet-adjacent), which matters for outfit-compatibility scoring; grouping with belt/tie/glove (functional accessory_other) was less useful downstream than grouping with bracelets/necklaces. Revisit if Polyvore's own fine-grained watch category (still not in the handoff) turns out to sit elsewhere."
+        },
+        {
+          "source_id": 19,
+          "source_label": "belt",
+          "common_category": "accessory_other",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 20,
+          "source_label": "leg warmer",
+          "common_category": "accessory_other",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel",
+          "note": "Finalized (2026-09-27): no legwear/hosiery bucket exists in the 11-category vocabulary. Mapped to accessory_other, the same catch-all used for belt/tie/glove/umbrella, rather than forcing a false match to bottom or footwear."
+        },
+        {
+          "source_id": 21,
+          "source_label": "tights, stockings",
+          "common_category": "accessory_other",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel",
+          "note": "Finalized (2026-09-27): same reasoning as leg warmer — hosiery, no dedicated bucket, mapped to accessory_other."
+        },
+        {
+          "source_id": 22,
+          "source_label": "sock",
+          "common_category": "accessory_other",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel",
+          "note": "Finalized (2026-09-27): same reasoning as leg warmer — worn on the foot but not footwear itself (not a shoe); no hosiery bucket exists, mapped to accessory_other."
+        },
+        {
+          "source_id": 23,
+          "source_label": "shoe",
+          "common_category": "footwear",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 24,
+          "source_label": "bag, wallet",
+          "common_category": "bag",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 25,
+          "source_label": "scarf",
+          "common_category": "scarf",
+          "mapping_status": "direct",
+          "source_role": "main_apparel"
+        },
+        {
+          "source_id": 26,
+          "source_label": "umbrella",
+          "common_category": "accessory_other",
+          "mapping_status": "approximate",
+          "source_role": "main_apparel",
+          "note": "Catch-all placement; no umbrella class elsewhere."
+        },
+        {
+          "source_id": 27,
+          "source_label": "hood",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "garment_part",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 28,
+          "source_label": "collar",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "garment_part",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 29,
+          "source_label": "lapel",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "garment_part",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 30,
+          "source_label": "epaulette",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "garment_part",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 31,
+          "source_label": "sleeve",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "garment_part",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 32,
+          "source_label": "pocket",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "garment_part",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 33,
+          "source_label": "neckline",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "garment_part",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 34,
+          "source_label": "buckle",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "closure",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 35,
+          "source_label": "zipper",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "closure",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 36,
+          "source_label": "applique",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "decoration",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 37,
+          "source_label": "bead",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "decoration",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 38,
+          "source_label": "bow",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "decoration",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 39,
+          "source_label": "flower",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "decoration",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 40,
+          "source_label": "fringe",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "decoration",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 41,
+          "source_label": "ribbon",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "decoration",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 42,
+          "source_label": "rivet",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "decoration",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 43,
+          "source_label": "ruffle",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "decoration",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 44,
+          "source_label": "sequin",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "decoration",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        },
+        {
+          "source_id": 45,
+          "source_label": "tassel",
+          "common_category": null,
+          "mapping_status": "not_a_garment",
+          "source_role": "part",
+          "part_group": "decoration",
+          "note": "Localized part; Fashionpedia parts are not standalone garments (dataset decision)."
+        }
+      ]
+    },
+    "polyvore_outfits": {
+      "manifest_source_dataset": "Polyvore Outfits",
+      "scope": "selected_for_compatibility_and_recommendation",
+      "label_level": "item",
+      "geometry": "none",
+      "attributes_status": "unavailable_in_source",
+      "attribute_note": "Only free-text title/description exist, mostly blank in the checked samples. No structured attributes.",
+      "id_note": "127 fine-grained category ids each belong to exactly one semantic group. Fine-grained names are not in the handoff, so mapping is at semantic-group level.",
+      "source_id_to_semantic": {
+        "3": "all-body",
+        "4": "all-body",
+        "5": "all-body",
+        "6": "all-body",
+        "7": "bottoms",
+        "8": "bottoms",
+        "9": "bottoms",
+        "10": "bottoms",
+        "11": "tops",
+        "15": "tops",
+        "17": "tops",
+        "18": "outerwear",
+        "19": "tops",
+        "21": "tops",
+        "23": "outerwear",
+        "24": "outerwear",
+        "25": "outerwear",
+        "26": "tops",
+        "27": "bottoms",
+        "28": "bottoms",
+        "29": "bottoms",
+        "31": "bottoms",
+        "35": "bags",
+        "36": "bags",
+        "37": "bags",
+        "38": "bags",
+        "39": "bags",
+        "40": "bags",
+        "41": "shoes",
+        "42": "shoes",
+        "43": "shoes",
+        "46": "shoes",
+        "47": "shoes",
+        "48": "shoes",
+        "49": "shoes",
+        "50": "shoes",
+        "51": "scarves",
+        "52": "accessories",
+        "53": "accessories",
+        "55": "hats",
+        "56": "accessories",
+        "57": "sunglasses",
+        "58": "accessories",
+        "59": "accessories",
+        "61": "jewellery",
+        "62": "jewellery",
+        "64": "jewellery",
+        "65": "jewellery",
+        "68": "accessories",
+        "69": "accessories",
+        "104": "tops",
+        "105": "scarves",
+        "106": "jewellery",
+        "107": "jewellery",
+        "236": "outerwear",
+        "237": "bottoms",
+        "238": "bottoms",
+        "239": "bottoms",
+        "240": "bottoms",
+        "241": "bottoms",
+        "243": "all-body",
+        "244": "all-body",
+        "249": "bottoms",
+        "250": "tops",
+        "251": "accessories",
+        "252": "tops",
+        "253": "bottoms",
+        "255": "bottoms",
+        "256": "tops",
+        "257": "tops",
+        "258": "bags",
+        "259": "bags",
+        "260": "bags",
+        "261": "shoes",
+        "262": "shoes",
+        "263": "shoes",
+        "264": "shoes",
+        "265": "shoes",
+        "266": "shoes",
+        "267": "shoes",
+        "268": "shoes",
+        "270": "accessories",
+        "275": "tops",
+        "277": "outerwear",
+        "278": "bottoms",
+        "281": "all-body",
+        "287": "bottoms",
+        "290": "bags",
+        "291": "shoes",
+        "292": "shoes",
+        "293": "shoes",
+        "296": "shoes",
+        "297": "shoes",
+        "299": "accessories",
+        "300": "accessories",
+        "301": "accessories",
+        "302": "accessories",
+        "303": "hats",
+        "304": "sunglasses",
+        "305": "jewellery",
+        "307": "jewellery",
+        "309": "tops",
+        "310": "bottoms",
+        "315": "tops",
+        "318": "bags",
+        "332": "bottoms",
+        "341": "tops",
+        "1605": "all-body",
+        "1606": "all-body",
+        "1607": "outerwear",
+        "4452": "bottoms",
+        "4454": "tops",
+        "4455": "outerwear",
+        "4456": "outerwear",
+        "4458": "bottoms",
+        "4459": "bottoms",
+        "4460": "accessories",
+        "4461": "bags",
+        "4462": "bags",
+        "4463": "accessories",
+        "4466": "jewellery",
+        "4467": "accessories",
+        "4472": "accessories",
+        "4495": "tops",
+        "4496": "tops",
+        "4517": "tops",
+        "4518": "bottoms"
+      },
+      "category_map": [
+        {
+          "source_id": null,
+          "source_label": "all-body",
+          "common_category": "one_piece",
+          "mapping_status": "approximate",
+          "note": "All-body items are mostly dresses/jumpsuits; the exact contents are not verified."
+        },
+        {
+          "source_id": null,
+          "source_label": "tops",
+          "common_category": "top",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": null,
+          "source_label": "bottoms",
+          "common_category": "bottom",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": null,
+          "source_label": "outerwear",
+          "common_category": "outerwear",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": null,
+          "source_label": "shoes",
+          "common_category": "footwear",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": null,
+          "source_label": "bags",
+          "common_category": "bag",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": null,
+          "source_label": "hats",
+          "common_category": "headwear",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": null,
+          "source_label": "sunglasses",
+          "common_category": "eyewear",
+          "mapping_status": "approximate",
+          "note": "Sunglasses only, a subset of eyewear."
+        },
+        {
+          "source_id": null,
+          "source_label": "scarves",
+          "common_category": "scarf",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": null,
+          "source_label": "jewellery",
+          "common_category": "jewellery",
+          "mapping_status": "direct"
+        },
+        {
+          "source_id": null,
+          "source_label": "accessories",
+          "common_category": "accessory_other",
+          "mapping_status": "approximate",
+          "note": "Catch-all group; contents are not verified."
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "item_id": "fashion_mnist_train_000003",
+      "source_category_id": 3,
+      "source_category_label": "Dress",
+      "common_category": "one_piece",
+      "category_mapping_status": "direct",
+      "attributes": null,
+      "attributes_status": "unavailable_in_source"
+    },
+    {
+      "item_id": "fashionpedia_val_ann_008921",
+      "source_category_id": 32,
+      "source_category_label": "pocket",
+      "common_category": null,
+      "category_mapping_status": "not_a_garment",
+      "attributes": [
+        219
+      ],
+      "attributes_status": "present"
+    },
+    {
+      "item_id": "fashionpedia_val_ann_008922",
+      "source_category_id": 35,
+      "source_category_label": "zipper",
+      "common_category": null,
+      "category_mapping_status": "not_a_garment",
+      "attributes": null,
+      "attributes_status": "not_annotated"
+    },
+    {
+      "item_id": "polyvore_outfits_disjoint_validation_114380093",
+      "source_category_id": 37,
+      "source_category_label": "bags",
+      "common_category": "bag",
+      "category_mapping_status": "direct",
+      "attributes": null,
+      "attributes_status": "unavailable_in_source"
+    }
+  ],
+  "open_decisions": [
+    {
+      "decision": "Approve the common vocabulary and the cross-dataset mapping.",
+      "owner": "Project lead with ML team",
+      "current_default": "Handoff docs say no cross-dataset mapping in M1. This file is a proposal only; source labels stay authoritative."
+    },
+    {
+      "decision": "Provide Polyvore fine-grained category names (metadata.json) and the full Fashionpedia attribute list.",
+      "owner": "Dataset owner",
+      "current_default": "Source ids kept, names marked unavailable."
+    }
+  ]
+}
