@@ -7,7 +7,7 @@ import random
 from pathlib import Path
 from typing import Any
 
-from .preprocessing import build_transforms
+from .preprocessing import DEFAULT_CONFIG_PATH, build_transforms
 
 M1_M2_FIELDS = (
     "item_id",
@@ -65,6 +65,18 @@ def _parse_list(value: Any) -> list[Any]:
     return [item for item in text.split(";") if item]
 
 
+def _parse_bool(value: Any) -> bool:
+    if _is_missing(value):
+        return False
+    if isinstance(value, str):
+        if value.strip().lower() in {"true", "1"}:
+            return True
+        if value.strip().lower() in {"false", "0", ""}:
+            return False
+        raise ValueError(f"Invalid boolean: {value!r}")
+    return bool(value)
+
+
 def _parse_bbox(value: Any) -> list[float] | None:
     if _is_missing(value) or value == "":
         return None
@@ -72,7 +84,8 @@ def _parse_bbox(value: Any) -> list[float] | None:
     try:
         parsed = ast.literal_eval(str(value))
         if isinstance(parsed, (list, tuple)) and len(parsed) == 4:
-            return [float(item) for item in parsed]
+            box = [float(item) for item in parsed]
+            return box if all(math.isfinite(x) for x in box) and box[2] > 0 and box[3] > 0 else None
     except (ValueError, SyntaxError, TypeError):
         # Leave malformed annotations unavailable rather than inventing coordinates.
         return None
@@ -155,7 +168,7 @@ class WardiqImageDataset:
         transform: Any = None,
         strict_paths: bool = True,
         image_root: str | Path | None = None,
-        config_path: str | Path = "configs/m1/preprocessing.yaml",
+        config_path: str | Path = DEFAULT_CONFIG_PATH,
     ):
         self.df = manifest[manifest.target_split.eq(split)].reset_index(drop=True).copy()
 
@@ -242,10 +255,11 @@ class WardiqGarmentDataset:
         split: str,
         transform: Any = None,
         image_root: str | Path | None = None,
-        config_path: str | Path = "configs/m1/preprocessing.yaml",
+        config_path: str | Path = DEFAULT_CONFIG_PATH,
     ):
         df = garment_manifest[
-            garment_manifest.target_split.eq(split) & garment_manifest.usable_derivative.eq(True)
+            garment_manifest.target_split.eq(split)
+            & garment_manifest.usable_derivative.map(_parse_bool)
         ].copy()
 
         self.df = df.reset_index(drop=True)
@@ -256,6 +270,7 @@ class WardiqGarmentDataset:
             self.transform, self.transform_config = build_transforms(
                 train=(split == "train"),
                 config_path=config_path,
+                include_random_flip=False,
             )
         else:
             self.transform = transform
@@ -313,7 +328,7 @@ class WardiqGarmentDataset:
         flipped = False
 
         if self.transform_config is not None:
-            target_width, target_height = self.transform_config["image_size"]
+            target_height, target_width = self.transform_config["image_size"]
 
             if self.transform_config["horizontal_flip"]:
                 probability = self.transform_config["horizontal_flip_probability"]
@@ -345,7 +360,7 @@ class WardiqGarmentDataset:
             "source_dataset": str(_row_value(row, "source_dataset")),
             "image_path": str(path),
             "category_label": category_label,
-            "available_attributes": None,
+            "available_attributes": _parse_list(_row_value(row, "attribute_ids")) or None,
             "bounding_box": bbox,
             "segmentation_mask": None,
             "split": str(_row_value(row, "target_split")),
@@ -357,7 +372,7 @@ class WardiqGarmentDataset:
                 "category_mapping_status",
             ),
             "crop_method": crop_method,
-            "fallback_used": bool(_row_value(row, "fallback_used", False)),
+            "fallback_used": _parse_bool(_row_value(row, "fallback_used", False)),
             "bounding_box_format": ("xywh" if bbox is not None else None),
             "group_id": (
                 None

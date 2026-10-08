@@ -1,3 +1,9 @@
+> Repository update (2026-10-08): this historical verification describes external
+> integrated handoff artifacts, including files absent from this checkout. It does
+> not certify the newly merged repository implementation. See
+> [the repository integration verification](../audit/M1_MERGE_INTEGRATION_VERIFICATION.md)
+> for reproducible checks of the current code and remaining data limitations.
+
 # WARDIQ M1 — Final Verification Report
 
 Owner: asmaa farahat · Task: Taxonomy, M1 documentation & verification

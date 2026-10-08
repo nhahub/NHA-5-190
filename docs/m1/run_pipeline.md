@@ -55,8 +55,8 @@ Hana's garment manifest is loaded separately so garment-specific columns do not 
 ```python
 from wardiq.data.datasets import WardiqGarmentDataset, load_garment_manifest
 
-garments = load_garment_manifest("data/manifests/garment_manifest.csv")
-dataset = WardiqGarmentDataset(garments, split="validation")
+garments = load_garment_manifest("artifacts/m1/garment_manifest.csv")
+dataset = WardiqGarmentDataset(garments, split="validation", image_root=".")
 sample = dataset[0]
 ```
 
@@ -93,3 +93,51 @@ For a full local run, use the canonical manifest paths agreed by the team and ve
 ## Current limitation
 
 The image-level M1 manifest covers all 85,815 retained records, but the current upstream handoff only includes prototype garment derivatives. A full garment run still depends on the remaining raw images and garment assets being available.
+
+## Reproduce the committed sample handoff
+
+Run from the repository root after installing the extras above:
+
+```bash
+python scripts/tasks.py clean-manifest
+python scripts/apply_taxonomy.py --mapped-out artifacts/m1/taxonomy_manifest.csv
+python scripts/tasks.py garments
+python scripts/tasks.py test
+```
+
+The clean manifest contains 85,815 records; the optional taxonomy export adds common
+and direct common categories while preserving source columns. The vocabulary retains
+its proposal status in the taxonomy configuration.
+
+Garment preparation writes `artifacts/m1/garment_manifest.csv` with 56 rows:
+13 Fashionpedia crops, 5 Polyvore product photos, 5 Fashion-MNIST previews and 33 skipped parts.
+Only 23 rows have `usable_derivative=True`. Images are under `data/processed/garment_crops/`.
+The committed `data/manifests/garment_manifest.csv` supplies the previously delivered
+sample split membership and remains historical evidence. It is not the generated loader input.
+Canonical full split manifests and full raw images are still absent from this checkout.
+
+The generated output records `target_split`, `image_path`, numeric source category IDs,
+crop-local `processed_bbox_xywh`, original source geometry and attributes where available.
+Fashion-MNIST uses the supplied 280x280 previews; `native_resolution_scale=0.1` describes
+their relationship to the unavailable native 28x28 images, not a resize performed by this script.
+Polyvore filename recovery requires a unique suffix match and is recorded in `path_resolution`.
+Polyvore leakage groups use outfit IDs without item-position suffixes.
+
+Built-in garment transforms flip pixels and boxes together once, then resize using
+`image_size: [height, width]`. Custom transforms must preserve geometry; arbitrary spatial
+transforms supplied by callers require their own matching annotation handling.
+For callers outside the repository, supply an absolute `image_root` when loading relative paths.
+
+The garment command also generates `artifacts/m1/sample_image_manifest.csv`, containing
+all 15 delivered source images with original traceability, aligned source labels,
+proposed common categories and delivered target splits. This is the runnable prototype
+input for `WardiqImageDataset`; the larger `integrated_m1_manifest.csv` in the earlier
+example still requires the team's canonical full image/split handoff.
+
+```python
+from wardiq.data.datasets import WardiqImageDataset, load_manifest
+
+images = load_manifest("artifacts/m1/sample_image_manifest.csv")
+dataset = WardiqImageDataset(images, split="validation", image_root=".")
+sample = dataset[0]  # RGB tensor, shape [3, 224, 224]
+```

@@ -60,7 +60,7 @@ sources:
       reason_field: fallback_reason
     known_issue:
       description: "Sample manifest points to original_28x28/ and preview_280x280/ subfolders that are not present in this handoff package. Only flat 280x280 PNGs (upscaled 10x from the native 28x28 for viewing) are included."
-      impact: "Crops in this prototype run are made from the 280x280 preview file, not the native 28x28 pixels. image_size_source=preview_upscaled and resize_scale=0.1 are recorded per row so downstream code can rescale back to native resolution."
+      impact: "Crops in this prototype run are made from the 280x280 preview file, not the native 28x28 pixels. image_size_source=preview_upscaled and native_resolution_scale=0.1 are recorded per row so downstream code can rescale back to native resolution."
       owner: Eyad
 
 resize_policy:
@@ -68,5 +68,9 @@ resize_policy:
   note: "If a later step resizes a crop, it must record scale_x/scale_y or the new geometry against processed_bbox_xywh so source and processed geometry stay distinguishable, per the task's own requirement."
 
 output:
-  manifest_path: data/manifests/garment_manifest.csv
-  crops_root: data/derived/garment_crops
+  manifest_path: artifacts/m1/garment_manifest.csv
+  image_manifest_path: artifacts/m1/sample_image_manifest.csv
+  crops_root: data/processed/garment_crops
+
+# Delivered split metadata, retained as evidence until Omar supplies canonical splits.
+split_reference: data/manifests/garment_manifest.csv

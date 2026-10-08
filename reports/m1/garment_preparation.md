@@ -1,3 +1,13 @@
+# Repository integration update (2026-10-08)
+
+The historical report below describes external handoff files, some of which are not committed here.
+Run `python scripts/prepare_garment_crops.py` to produce `artifacts/m1/garment_manifest.csv`
+and crops in `data/processed/garment_crops/`. The checked-in garment CSV is preserved as
+split evidence, not used as the generated loader input. The new output has loader fields,
+canonical dataset/category IDs, crop-local geometry and delivered split membership.
+The Polyvore leakage group is the outfit ID, without its item-position suffix.
+No full-dataset or missing test-split verification is implied by this sample run.
+
 # M1 Garment Preparation Report — Hana
 
 ## Update — split verification against Omar's files (this section added after Omar's train.csv / validation.csv arrived)
@@ -52,7 +62,7 @@ Polyvore and Fashion-MNIST items are **not** fallback cases in the "missing anno
 
 ## 4. Representative examples
 
-![contact sheet](../../data/derived/garment_crops/contact_sheet.jpg)
+!contact sheet (external handoff; unavailable in this checkout)
 
 | Example | Result | Comment |
 |---|---|---|
