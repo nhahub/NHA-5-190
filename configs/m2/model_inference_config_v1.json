@@ -1,0 +1,48 @@
+{
+  "config_version": "1.0.0",
+  "status": "protocol_defined_training_blocked",
+  "vocabulary_version": "1.0.0",
+  "model": {
+    "type": "multi_label_baseline",
+    "planned_architecture": "independent_per_attribute_logistic_or_linear_heads",
+    "training_loss": "masked_binary_cross_entropy",
+    "loss_mask": "observation_mask"
+  },
+  "threshold_selection": {
+    "status": "pending_validation_predictions",
+    "selection_split": "validation",
+    "method": "per_attribute_threshold_search_maximizing_masked_f1",
+    "candidate_thresholds": "0.05_to_0.95_step_0.05",
+    "minimum_observed_labels_required": "must be declared before threshold fitting",
+    "test_isolation": true
+  },
+  "evaluation": {
+    "metric_mask": "observation_mask",
+    "missing_labels_in_denominator": false,
+    "missing_labels_as_negative": false,
+    "metrics": [
+      "per_attribute_precision",
+      "per_attribute_recall",
+      "per_attribute_f1",
+      "aggregate_masked_metrics"
+    ],
+    "support_counts_required": true
+  },
+  "inference": {
+    "score_vector_length": 35,
+    "score_range": [
+      0.0,
+      1.0
+    ],
+    "ordering": "attribute_vocabulary_v1",
+    "support_mask_required": true,
+    "observation_mask_required_for_ground_truth_evaluation": true
+  },
+  "current_blocker": {
+    "status": "blocked",
+    "reason": "No Fashionpedia training split is available in the current handoff.",
+    "training_supported_labels": 0,
+    "model_checkpoint": null,
+    "validation_thresholds": null
+  }
+}

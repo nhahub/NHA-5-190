@@ -1,0 +1,51 @@
+﻿{
+  "schema_version": "1.0.0",
+  "status": "initial_provisional",
+  "vocabulary_version": "1.0.0",
+
+  "item_key": {
+    "field": "item_id",
+    "type": "string",
+    "description": "Stable item identifier used to join predictions with downstream records."
+  },
+
+  "scores": {
+    "type": "array",
+    "length": 35,
+    "value_range": [0.0, 1.0],
+    "ordering": "attribute_vocabulary_v1",
+    "description": "Per-attribute model scores. Index i corresponds to vocabulary label index i."
+  },
+
+  "support_mask": {
+    "type": "array",
+    "length": 35,
+    "value_type": "0_or_1",
+    "description": "Inference-time availability/support mask. 1 means the attribute is supported by the current model/vocabulary; 0 means unavailable or unsupported."
+  },
+
+  "observation_mask": {
+    "type": "array",
+    "length": 35,
+    "value_type": "0_or_1",
+    "description": "Training/evaluation observation mask. 1 means ground-truth evidence is observed; 0 means unknown/unannotated. This mask is distinct from support_mask."
+  },
+
+  "attribute_source": {
+    "type": "string",
+    "description": "Provenance of the attribute vocabulary/annotation source."
+  },
+
+  "model_version": {
+    "type": "string",
+    "description": "Version identifier of the model producing the scores."
+  },
+
+  "semantics": {
+    "unknown_training_label": "observation_mask=0",
+    "known_positive": "target=1 and observation_mask=1",
+    "known_negative": "target=0 and observation_mask=1",
+    "unknown_is_not_negative": true,
+    "unsupported_inference_attribute": "support_mask=0"
+  }
+}

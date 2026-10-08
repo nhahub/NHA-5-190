@@ -1,0 +1,222 @@
+﻿{
+    "vocabulary_version":  "1.0.0",
+    "status":  "initial_provisional",
+    "source_dataset":  "Fashionpedia",
+    "ordering":  "ascending_attribute_id",
+    "vector_length":  35,
+    "unknown_semantics":  "Attributes not observed or not annotated for an item are unknown and must have observation_mask=0. Unknown attributes must not be converted to negative targets.",
+    "negative_semantics":  "No explicit known-negative annotation semantics were established from the available M1 handoff. Negative targets must not be generated from attribute absence.",
+    "support_status_definition":  "Labels below have observed positive evidence and verified ID-to-name mappings in the available annotation-level validation sample. They are provisional and are not claimed to be fully supported training labels.",
+    "labels":  [
+                   {
+                       "index":  0,
+                       "attribute_id":  0,
+                       "name":  "classic (t-shirt)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  1,
+                       "attribute_id":  20,
+                       "name":  "biker (jacket)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  2,
+                       "attribute_id":  29,
+                       "name":  "track (jacket)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  3,
+                       "attribute_id":  36,
+                       "name":  "jeans",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  4,
+                       "attribute_id":  115,
+                       "name":  "symmetrical",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  5,
+                       "attribute_id":  128,
+                       "name":  "straight",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  6,
+                       "attribute_id":  136,
+                       "name":  "regular (fit)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  7,
+                       "attribute_id":  137,
+                       "name":  "loose (fit)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  8,
+                       "attribute_id":  143,
+                       "name":  "low waist",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  9,
+                       "attribute_id":  145,
+                       "name":  "no waistline",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  10,
+                       "attribute_id":  146,
+                       "name":  "above-the-hip (length)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  11,
+                       "attribute_id":  147,
+                       "name":  "hip (length)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  12,
+                       "attribute_id":  154,
+                       "name":  "maxi (length)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  13,
+                       "attribute_id":  157,
+                       "name":  "short (length)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  14,
+                       "attribute_id":  160,
+                       "name":  "wrist-length",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  15,
+                       "attribute_id":  162,
+                       "name":  "regular (collar)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  16,
+                       "attribute_id":  163,
+                       "name":  "shirt (collar)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  17,
+                       "attribute_id":  182,
+                       "name":  "round (neck)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  18,
+                       "attribute_id":  204,
+                       "name":  "set-in sleeve",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  19,
+                       "attribute_id":  205,
+                       "name":  "dropped-shoulder sleeve",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  20,
+                       "attribute_id":  206,
+                       "name":  "raglan (sleeve)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  21,
+                       "attribute_id":  218,
+                       "name":  "patch (pocket)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  22,
+                       "attribute_id":  219,
+                       "name":  "welt (pocket)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  23,
+                       "attribute_id":  220,
+                       "name":  "kangaroo (pocket)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  24,
+                       "attribute_id":  223,
+                       "name":  "curved (pocket)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  25,
+                       "attribute_id":  225,
+                       "name":  "single breasted",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  26,
+                       "attribute_id":  229,
+                       "name":  "zip-up",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  27,
+                       "attribute_id":  230,
+                       "name":  "fly (opening)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  28,
+                       "attribute_id":  234,
+                       "name":  "no opening",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  29,
+                       "attribute_id":  295,
+                       "name":  "no non-textile material",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  30,
+                       "attribute_id":  301,
+                       "name":  "printed",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  31,
+                       "attribute_id":  304,
+                       "name":  "pleat",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  32,
+                       "attribute_id":  316,
+                       "name":  "no special manufacturing technique",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  33,
+                       "attribute_id":  317,
+                       "name":  "plain (pattern)",
+                       "status":  "observed_verified"
+                   },
+                   {
+                       "index":  34,
+                       "attribute_id":  322,
+                       "name":  "check",
+                       "status":  "observed_verified"
+                   }
+               ]
+}
