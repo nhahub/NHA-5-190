@@ -1,0 +1,14 @@
+schema_version: wardiq.color-config.v1
+extractor:
+  k: 5
+  seed: 42
+  max_pixels: 20000
+  n_init: 10
+  max_iter: 300
+  prediction_batch_size: 16384
+  alpha_threshold: 1
+  allow_full_image_fallback: true
+excluded_datasets:
+  - Fashion-MNIST
+scope: delivered_garment_samples
+review_sample_limit: 24
