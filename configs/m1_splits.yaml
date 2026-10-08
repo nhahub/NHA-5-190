@@ -1,0 +1,56 @@
+random_seed: 42
+fashion_mnist:
+  method: stratified_random_split
+  validation_fraction: 0.1
+  stratify_by: category_labels
+  preserve_official_test: true
+fashionpedia:
+  method: official_source_split
+  provided_splits:
+  - validation
+  preserve_official_splits: true
+  public_test_labels_available: false
+  use_test_for_model_selection: false
+  limitation: The current raw manifest contains validation records only. No missing
+    train/test records were inferred.
+polyvore_outfits:
+  method: official_disjoint_validation
+  provided_splits:
+  - disjoint validation
+  split_unit: outfit
+  do_not_split_rows_randomly: true
+  limitation: The current raw manifest contains disjoint validation records only.
+    No missing train/test records were inferred.
+deepfashion_multimodal:
+  action: backup_only
+  download_now: false
+input_manifest:
+  path: data/manifests/raw_manifest.csv
+  rows: 85815
+  columns: 17
+  sha256: 6fc8e4e2b1f6a2f02c9582b3d9b208cb9240a0cdae7fc3d729e22be196c8aae1
+source_releases:
+  Fashion-MNIST:
+  - zalando-research/fashion-mnist IDX release
+  Fashionpedia:
+  - Fashionpedia 2020
+  Polyvore Outfits:
+  - mvasil/polyvore-outfits Hugging Face parquet repack
+exact_assignment_file: data/manifests/split_manifest.csv
+assignment_verification:
+  all_items_assigned_exactly_once: true
+  item_count: 85815
+  counts_reconciled_with_raw_manifest: true
+evaluation_manifest:
+  path: data/manifests/evaluation_manifest.csv
+  records: 10000
+  sha256: 84dbc08c1f4bfcf9459e35ce4a78bbf74ca9b324183c105b290e5c0b4ac3a6b5
+  immutable: true
+  contains_only_target_split: test
+  use_for_model_selection: false
+  use_for_final_evaluation: true
+test_isolation:
+  excluded_from_fitting_preprocessing_statistics: true
+  excluded_from_augmentation_selection: true
+  excluded_from_model_tuning: true
+  reserved_for_final_evaluation: true
