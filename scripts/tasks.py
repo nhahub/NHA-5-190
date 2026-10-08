@@ -24,13 +24,14 @@ SCOPE = [
     "scripts/inspect_m1_manifest.py",
     "scripts/apply_taxonomy.py",
     "scripts/prepare_garment_crops.py",
+    "scripts/extract_color_palettes.py",
 ]
 
 
 def main() -> int:
     """Run one explicit quality command and preserve its exit status."""
     commands = {
-        "setup": ["-m", "pip", "install", "-e", ".[dev,data,ml]"],
+        "setup": ["-m", "pip", "install", "-e", ".[dev,data,ml,color]"],
         "lint": ["-m", "ruff", "check", *SCOPE],
         "format": ["-m", "ruff", "format", *SCOPE],
         "format-check": ["-m", "ruff", "format", "--check", *SCOPE],
@@ -44,6 +45,7 @@ def main() -> int:
         "duplicates": ["scripts/check_manifest_duplicates.py"],
         "m1-images": ["scripts/validate_m1_images.py"],
         "taxonomy": ["scripts/apply_taxonomy.py"],
+        "colors": ["scripts/extract_color_palettes.py"],
         "garments": ["scripts/prepare_garment_crops.py"],
         "m1-eda": ["scripts/inspect_m1_manifest.py"],
     }
