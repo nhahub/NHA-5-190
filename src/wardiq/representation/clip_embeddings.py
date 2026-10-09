@@ -124,8 +124,8 @@ def normalize_embeddings(
             "Embeddings must have nonzero norms; zero-length vectors cannot be normalized."
         )
 
-    normalized = values / norms
-    return normalized.astype(np.float32, copy=False)
+    normalized = np.asarray(values / norms, dtype=np.float32)
+    return normalized
 
 
 def validate_embedding_artifact(
@@ -183,9 +183,9 @@ def extract_clip_embeddings(
         **load_options,
     )
     model = CLIPModel.from_pretrained(
-        CLIP_MODEL_ID,
+        pretrained_model_name_or_path=CLIP_MODEL_ID,
         **load_options,
-    ).to(device)
+    ).to(device)  # type: ignore[arg-type]
 
     model.eval()
 
