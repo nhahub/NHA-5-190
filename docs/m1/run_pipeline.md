@@ -106,6 +106,7 @@ python scripts/tasks.py splits
 python scripts/apply_taxonomy.py --mapped-out artifacts/m1/taxonomy_manifest.csv
 python scripts/tasks.py garments
 python scripts/tasks.py colors
+python scripts/tasks.py attributes
 python scripts/tasks.py test
 ```
 

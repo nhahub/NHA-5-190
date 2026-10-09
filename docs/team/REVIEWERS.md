@@ -7,7 +7,7 @@ downstream review. No teammate account or backup reviewer has been guessed.
 | Boundary | Producer coordination | Downstream reviewers | Backup |
 |---|---|---|---|
 | M1 data foundation | Eyad with the assigned M1 producers | Ziad and Asmaa | Needs team confirmation |
-| M2 representation/cache | Hayat with the assigned M2 producers | Omar, Hana and Asmaa | Needs team confirmation |
+| M2 representation/cache | Hana for schema/integration, Eyad for cache, and component owners | Omar, Hana and Asmaa | Needs team confirmation |
 | M3 scoring/ranking | Assigned M3 producers | Hana and Asmaa | Needs team confirmation |
 | M4 integration/output | Assigned M4 producers with Asmaa | Asmaa and relevant M5 evaluation owners | Needs team confirmation |
 

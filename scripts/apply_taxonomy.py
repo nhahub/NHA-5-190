@@ -15,6 +15,7 @@ from collections import Counter
 from pathlib import Path
 
 import pandas as pd
+from research_cli import protect_evidence
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -63,6 +64,8 @@ def main():
     a = ap.parse_args()
 
     outputs = [Path(a.out)] + ([Path(a.mapped_out)] if a.mapped_out else [])
+    for path in outputs:
+        protect_evidence(path)
     protected = {Path(a.manifest).resolve(), Path(a.taxonomy).resolve()}
     if any(path.resolve() in protected for path in outputs):
         raise ValueError("Outputs must not overwrite source inputs")

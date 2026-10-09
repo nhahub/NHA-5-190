@@ -1,107 +1,59 @@
-﻿import argparse
-import ast
+"""Build positive-only targets; unknown labels remain masked, never known negatives."""
+
+import argparse
 import json
-from pathlib import Path
 
 import pandas as pd
-
-
-def parse_attribute_ids(value):
-    if pd.isna(value) or str(value).strip() in {"", "[]"}:
-        return []
-
-    parsed = ast.literal_eval(str(value))
-
-    if not isinstance(parsed, list):
-        raise ValueError(f"Expected a list of attribute IDs, got: {parsed!r}")
-
-    return [int(x) for x in parsed]
-
-
-def build_target_and_mask(attribute_ids, vocabulary_ids):
-    observed = set(attribute_ids)
-
-    unknown_ids = observed - set(vocabulary_ids)
-    if unknown_ids:
-        raise ValueError(
-            f"Observed attribute IDs are not in vocabulary: {sorted(unknown_ids)}"
-        )
-
-    target = [1 if attr_id in observed else 0 for attr_id in vocabulary_ids]
-    observation_mask = [1 if attr_id in observed else 0 for attr_id in vocabulary_ids]
-
-    return target, observation_mask
+from attribute_common import (
+    DEFAULT_MANIFEST,
+    DEFAULT_TARGETS,
+    DEFAULT_VOCABULARY,
+    build_target_and_mask,
+    load_vocabulary,
+    parse_attribute_ids,
+    read_manifest,
+    run,
+    safe_output,
+)
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--manifest",
-        default="data/manifests/fashionpedia_validation_sample_manifest.csv",
-    )
-    parser.add_argument(
-        "--vocabulary",
-        default="configs/m2/attribute_vocabulary_v1.json",
-    )
-    parser.add_argument(
-        "--output",
-        default="data/processed/m2/attribute_targets_validation_sample.csv",
-    )
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--manifest", default=DEFAULT_MANIFEST)
+    parser.add_argument("--vocabulary", default=DEFAULT_VOCABULARY)
+    parser.add_argument("--output", default=DEFAULT_TARGETS)
     args = parser.parse_args()
-
-    manifest_path = Path(args.manifest)
-    vocabulary_path = Path(args.vocabulary)
-    output_path = Path(args.output)
-
-    df = pd.read_csv(manifest_path)
-
-    with vocabulary_path.open("r", encoding="utf-8-sig") as f:
-        vocabulary = json.load(f)
-
-    labels = vocabulary["labels"]
-    vocabulary_ids = [int(x["attribute_id"]) for x in labels]
-
-    if len(vocabulary_ids) != vocabulary["vector_length"]:
-        raise ValueError("Vocabulary vector_length does not match labels length.")
-
-    if len(set(vocabulary_ids)) != len(vocabulary_ids):
-        raise ValueError("Vocabulary contains duplicate attribute IDs.")
-
+    output = safe_output(args.output, args.manifest, args.vocabulary)
+    vocabulary = load_vocabulary(args.vocabulary)
+    source = read_manifest(args.manifest)
+    ids = [label["attribute_id"] for label in vocabulary["labels"]]
     rows = []
-
-    for _, row in df.iterrows():
-        attribute_ids = parse_attribute_ids(row["attribute_ids"])
-
-        target, observation_mask = build_target_and_mask(
-            attribute_ids,
-            vocabulary_ids,
-        )
-
+    for row in source.itertuples():
+        target, mask = build_target_and_mask(parse_attribute_ids(row.attribute_ids), ids)
         rows.append(
             {
-                "item_id": row["item_id"],
-                "source_dataset": row["source_dataset"],
-                "source_split": row["source_split"],
+                "item_id": row.item_id,
+                "source_dataset": row.source_dataset,
+                "source_split": row.source_split,
                 "attribute_target": json.dumps(target),
-                "observation_mask": json.dumps(observation_mask),
-                "observed_positive_count": sum(observation_mask),
-                "unknown_count": len(observation_mask) - sum(observation_mask),
+                "observation_mask": json.dumps(mask),
+                "observed_positive_count": sum(mask),
+                "unknown_count": len(mask) - sum(mask),
                 "negative_count": 0,
                 "vocabulary_version": vocabulary["vocabulary_version"],
             }
         )
-
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    pd.DataFrame(rows).to_csv(output_path, index=False)
-
-    print(f"output = {output_path}")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(rows).to_csv(output, index=False, lineterminator="\n")
+    print(f"output = {output}")
     print(f"rows = {len(rows)}")
-    print(f"vector_length = {len(vocabulary_ids)}")
+    print(f"vector_length = {len(ids)}")
     print(f"vocabulary_version = {vocabulary['vocabulary_version']}")
-    print(f"total_observed_positives = {sum(r['observed_positive_count'] for r in rows)}")
-    print(f"total_unknown = {sum(r['unknown_count'] for r in rows)}")
-    print(f"total_known_negatives = {sum(r['negative_count'] for r in rows)}")
+    print(f"total_observed_positives = {sum(row['observed_positive_count'] for row in rows)}")
+    print(f"total_unknown = {sum(row['unknown_count'] for row in rows)}")
+    print("total_known_negatives = 0")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(run(main))

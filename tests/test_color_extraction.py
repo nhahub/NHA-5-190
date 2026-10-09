@@ -99,6 +99,18 @@ def test_full_image_fallback_can_be_disabled_without_geometry():
     assert result["failure_reason"] == "full_image_fallback_disabled"
 
 
+@pytest.mark.parametrize("box", [[-1e308, 0, -1e308, 1], [0, -1e308, 1, -1e308]])
+def test_invalid_large_negative_bbox_does_not_overflow(box):
+    rgb = np.zeros((2, 2, 3), dtype=np.uint8)
+    result = extract_palette(rgb, bbox_xywh=box)
+    assert result["status"] == "ok"
+    assert result["region_method"] == "full_image_fallback"
+    assert "invalid_bbox" in result["warnings"]
+    failed = extract_palette(rgb, ColorConfig(allow_full_image_fallback=False), bbox_xywh=box)
+    assert failed["status"] == "failed"
+    assert failed["failure_reason"] == "invalid_region_geometry"
+
+
 @pytest.mark.parametrize(
     "rgb",
     [

@@ -1,5 +1,9 @@
 # M1 and M2 merged checkout verification
 
+> These earlier integration fixes were subsequently pushed as `6a1c69c`.
+> See [the GitHub repository review](GITHUB_REPOSITORY_REVIEW.md) for hosted
+> results, the newer attribute handoff and additional local corrections.
+
 Date: 2026-10-08. Input checkout: `main` at `65eaa6d`, including Omar's
 M1 split PR #10, Eyad's M2 color PR #9 and M1 integration fixes PR #8.
 The additional corrections below are local, uncommitted changes.

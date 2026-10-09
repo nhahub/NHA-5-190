@@ -7,7 +7,7 @@ Do not commit directly to `main`. Create a branch using `feat/<name>/<scope>`, `
 ## Local setup
 
 ```powershell
-python -m pip install -e ".[dev]"
+python -m pip install -e ".[dev,data,ml,color]"
 python scripts/validate_repository.py
 python -m pytest
 ```
@@ -31,7 +31,9 @@ repository validation/task entry points. Historical research scripts and M1
 evidence are excluded from this initial formatting scope.
 
 Dependencies are defined in `pyproject.toml`; requirements files reference its
-extras. Install `.[data]` for inspection scripts and `.[ml]` for model development.
+extras. The complete setup above runs the full suite. Data inspection uses
+`.[data]`, image preprocessing/loaders use `.[data,ml]`, and standalone color
+extraction uses `.[color]`.
 
 Optional commit checks:
 

@@ -43,7 +43,8 @@ select = ["E", "F", "I", "W"]
 quote-style = "double"
 
 [tool.mypy]
-python_version = "3.10"
+# Use the running interpreter's version so installed dependency stubs match it.
+# CI checks the supported minimum separately in the Python 3.10 matrix job.
 files = ["src/wardiq"]
 strict = true
 mypy_path = "src"

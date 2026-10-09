@@ -142,6 +142,26 @@ def test_unknown_taxonomy_category_does_not_crash(tmp_path):
     assert "Traceback" not in result.stderr
 
 
+@pytest.mark.parametrize("option", ["--out", "--mapped-out"])
+def test_taxonomy_cannot_write_to_protected_repository_content(tmp_path, monkeypatch, option):
+    taxonomy = script_module("apply_taxonomy")
+    import research_cli
+
+    monkeypatch.setattr(research_cli, "ROOT", tmp_path)
+    protected = tmp_path / "configs" / "existing.csv"
+    protected.parent.mkdir()
+    protected.write_text("keep original evidence\n")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["apply_taxonomy.py", "--out", str(tmp_path / "coverage.csv"), option, str(protected)],
+    )
+    with pytest.raises(ValueError, match="protected repository content"):
+        taxonomy.main()
+    assert protected.read_text() == "keep original evidence\n"
+    assert not (tmp_path / "coverage.csv").exists()
+
+
 def test_invalid_bbox_and_string_boolean():
     assert _parse_bbox("[1e309, 0, 1, 1]") is None
     assert _parse_bbox("[0, 0, -1, 1]") is None

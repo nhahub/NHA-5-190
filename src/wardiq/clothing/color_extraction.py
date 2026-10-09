@@ -173,12 +173,17 @@ def extract_palette(
             result["warnings"].append("invalid_or_empty_mask")
             result["fallback_used"] = True
     if not geometry_used and bbox_xywh is not None:
-        valid = len(bbox_xywh) == 4 and all(math.isfinite(v) for v in bbox_xywh)
+        valid = (
+            len(bbox_xywh) == 4
+            and all(math.isfinite(v) for v in bbox_xywh)
+            and bbox_xywh[2] > 0
+            and bbox_xywh[3] > 0
+        )
         if valid:
             x, y, w, h = bbox_xywh
             left, top = max(0, math.floor(x)), max(0, math.floor(y))
             right, bottom = math.ceil(min(width, x + w)), math.ceil(min(height, y + h))
-            valid = w > 0 and h > 0 and right > left and bottom > top
+            valid = right > left and bottom > top
         if valid:
             box_mask = np.zeros((height, width), dtype=bool)
             box_mask[top:bottom, left:right] = True

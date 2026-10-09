@@ -10,7 +10,7 @@ Import a type explicitly, for example `from wardiq.contracts import ItemRepresen
 |---|---|---|
 | `RawManifestRow` | Existing raw CSV inventory | Matches the existing 17 text columns; no parsing |
 | `SourceIdentity`, `RunIdentity` | Identity and output provenance | Proposed shared vocabulary |
-| `ItemRepresentation` | M2 to M3 | Draft requiring Hayat and downstream approval |
+| `ItemRepresentation` | M2 to M3 | Draft requiring Hana, component owners and downstream approval |
 | `PairwiseScore`, `RankedOutfit` | M3 to M4 | Draft requiring scoring/ranking owners and reviewers |
 | `PersonalizedOutfit`, `WardrobeUtility` | M4 to M5 | Draft requiring personalization/WUS owners and reviewers |
 
@@ -29,6 +29,12 @@ JSON arrays only through an owner-provided serializer; no serializer is supplied
 Source identity keeps the original split. Project-split mapping remains a separate
 owner-produced artifact, not a replacement for original source identity.
 
+The merged [color component](m2/color_extraction.md) and
+[provisional attribute handoff](m2/attributes.md) now document their actual
+component outputs. The older shared `TypedDict` proposal is not a serializer or
+validator for those files. Hanaa's final integration must reconcile and freeze
+the real shapes before the full feature cache is released.
+
 Outfits explicitly identify each scored pair and retain structural rejection
 reasons. Rejected/unscored candidates may have `None` scores/ranks. Score ranges,
 OCS aggregation, rank base, ties, candidate rules and unresolved-item handling
@@ -46,7 +52,8 @@ their mathematics. Missing context does not imply a fabricated default score.
 4. Implement validation and serialization in the assigned owner's work, with checks
    at the boundary where an invalid record would break downstream processing.
 
-Strict package Mypy checks these definitions for Python 3.10 compatibility. A
+Strict package Mypy checks these definitions against the running interpreter;
+the CI Python 3.10 job verifies minimum-version compatibility. A
 `TypedDict` alone does not verify file existence, item references, equal vector
 lengths, probability bounds, or formula correctness. CI passing does not freeze
 these drafts or supply any pending teammate implementation.

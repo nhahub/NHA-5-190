@@ -73,3 +73,5 @@ jobs:
         run: python scripts/tasks.py garments
       - name: Extract and account for M2 sample palettes
         run: python scripts/tasks.py colors
+      - name: Build and validate the provisional M2 attribute handoff
+        run: python scripts/tasks.py attributes

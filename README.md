@@ -6,6 +6,12 @@ WARDIQ is a six-week AI/ML project for clothing understanding, outfit compatibil
 
 Milestone 1 data foundation is ready for team review. The repository includes a validated 85,815-row image manifest, verified development samples, dataset decisions, and reproducibility scripts. Large source datasets are intentionally excluded.
 
+The canonical M1 split inventory, tested M2 LAB color component and provisional
+[attribute target/mask handoff](docs/m2/attributes.md) are merged.
+Run [the current sample pipeline](docs/m1/run_pipeline.md) to verify splits,
+prepare garments and extract palettes. Full raw-image training and the final M2
+model/feature cache still require the remaining inputs and owner components.
+
 - **Fashionpedia:** provisionally selected for garment boxes, masks, categories, and attributes.
 - **Polyvore Outfits:** selected for compatibility and recommendation using the disjoint split.
 - **Fashion-MNIST:** used only for loader and preprocessing checks.
@@ -32,15 +38,16 @@ flowchart LR
 ## Quick start
 
 ```powershell
-python -m pip install -e ".[dev]"
+python -m pip install -e ".[dev,data,ml,color]"
 python scripts/validate_repository.py
 python -m pytest
 ```
 
 Run these commands from the repository root using your normal Python interpreter.
 No virtual environment or activation is required. Python 3.10+ is declared; local
-baseline validation used Python 3.13.15. Other versions and dependency installation
-must pass clean-install checks before compatibility is considered verified.
+baseline validation used Python 3.13.15. This setup includes the dependencies
+needed by the M1 image/garment loaders and M2 color tests. Hosted checks verify
+supported Python versions using freshly installed dependencies.
 
 GitHub CI is configured to check Python 3.10, 3.11, and 3.12 on pull requests,
 pushes to `main` or `chore/repo-hardening`, and manual runs. See
@@ -56,7 +63,8 @@ Research scripts accept portable input paths; see [reproduction commands](docs/R
 for required raw files and verified checks. Repository validation does not require
 raw downloads. Use `python scripts/tasks.py samples` for committed-sample checks.
 
-Install the optional ML stack only when model work begins:
+The ML extra supplies PyTorch/torchvision for M1 preprocessing and loader tests
+as well as later model work. To install that stack separately:
 
 ```powershell
 python -m pip install -e ".[ml]"

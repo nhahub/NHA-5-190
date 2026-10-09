@@ -1,3 +1,5 @@
+> Repository integration update: use [the current attribute pipeline](../../docs/m2/attributes.md). Run `python scripts/tasks.py attributes`; generated reports are under `artifacts/m2/attributes/v1/`.
+
 # M2 Supported Attribute Prediction - Validation Report
 
 ## Status
