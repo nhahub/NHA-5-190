@@ -1,8 +1,6 @@
-"""Unit tests for pairwise compatibility scoring and OCS aggregation (Milestone 3)."""
+"""Unit tests for pairwise scoring and OCS aggregation (Milestone 3)."""
 
 from __future__ import annotations
-
-import pytest
 
 from wardiq.compatibility.scoring import (
     compute_pairwise_cosine_similarity,

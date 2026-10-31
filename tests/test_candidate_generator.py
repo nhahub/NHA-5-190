@@ -1,15 +1,9 @@
-"""Unit and fixture tests for deterministic candidate generation (Milestone 3)."""
+"""Unit and fixture tests for deterministic candidate generation (M3)."""
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
-import pytest
-
 from wardiq.compatibility.candidate_generator import (
-    CandidateItem,
     compute_stable_outfit_id,
-    evaluate_candidate_combination,
     filter_eligible_items,
     generate_candidates,
     load_candidate_rules,
@@ -76,13 +70,15 @@ def test_filter_eligible_items():
             "target_split": "train",
         },
         {
-            "item_id": "item_valid",  # Duplicate ID
+            "item_id": "item_valid",
             "common_category": "bottom",
             "mapping_status": "direct",
             "target_split": "train",
         },
     ]
-    eligible, rejections, counts = filter_eligible_items(records, rules, target_split="train")
+    eligible, rejections, _ = filter_eligible_items(
+        records, rules, target_split="train"
+    )
     assert "item_valid" in eligible
     assert "item_invalid_status" not in eligible
     assert "item_missing_cat" not in eligible
@@ -92,12 +88,41 @@ def test_filter_eligible_items():
 def test_generate_candidates_synthetic():
     rules = load_candidate_rules()
     records = [
-        {"item_id": "t1", "common_category": "top", "mapping_status": "direct", "target_split": "train", "image_sha256": "h_t1"},
-        {"item_id": "b1", "common_category": "bottom", "mapping_status": "direct", "target_split": "train", "image_sha256": "h_b1"},
-        {"item_id": "f1", "common_category": "footwear", "mapping_status": "direct", "target_split": "train", "image_sha256": "h_f1"},
-        {"item_id": "s1", "common_category": "sneaker", "mapping_status": "unmapped", "target_split": "train"},  # Invalid mapping
+        {
+            "item_id": "t1",
+            "common_category": "top",
+            "mapping_status": "direct",
+            "target_split": "train",
+            "image_sha256": "h_t1",
+        },
+        {
+            "item_id": "b1",
+            "common_category": "bottom",
+            "mapping_status": "direct",
+            "target_split": "train",
+            "image_sha256": "h_b1",
+        },
+        {
+            "item_id": "f1",
+            "common_category": "footwear",
+            "mapping_status": "direct",
+            "target_split": "train",
+            "image_sha256": "h_f1",
+        },
+        {
+            "item_id": "s1",
+            "common_category": "sneaker",
+            "mapping_status": "unmapped",
+            "target_split": "train",
+        },
     ]
-    result = generate_candidates(records, rules=rules, target_split="train", seed=42, max_candidates=10)
+    result = generate_candidates(
+        records,
+        rules=rules,
+        target_split="train",
+        seed=42,
+        max_candidates=10,
+    )
     assert result.input_item_count == 4
     assert result.eligible_item_count == 3
     assert result.candidates_emitted >= 1

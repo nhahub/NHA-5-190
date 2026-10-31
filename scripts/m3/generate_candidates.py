@@ -1,8 +1,9 @@
-"""CLI runner for deterministic candidate generation and structural filtering (Milestone 3).
+"""CLI runner for deterministic candidate generation (Milestone 3).
 
 Usage:
-    python scripts/m3/generate_candidates.py --input data/samples/items_representation/examples.json --output artifacts/m3/candidates_sample.json
-    python scripts/m3/generate_candidates.py --input artifacts/m1/garment_manifest.csv --output artifacts/m3/candidates_polyvore.json
+    python scripts/m3/generate_candidates.py \
+        --input data/samples/items_representation/examples.json \
+        --output artifacts/m3/candidates_sample.json
 """
 
 from __future__ import annotations
@@ -20,7 +21,7 @@ from wardiq.compatibility.candidate_generator import (
 
 
 def load_items_from_source(path: Path) -> list[dict[str, Any]]:
-    """Load item records from JSON fixtures, JSONL feature caches, or CSV manifests."""
+    """Load item records from JSON fixtures, JSONL, or CSV manifests."""
     if path.suffix.lower() == ".json":
         data = json.loads(path.read_text(encoding="utf-8"))
         if isinstance(data, dict):
@@ -54,13 +55,27 @@ def load_items_from_source(path: Path) -> list[dict[str, Any]]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", required=True, type=Path, help="Path to input items (json, jsonl, csv)")
-    parser.add_argument("--output", required=True, type=Path, help="Path to output report JSON")
-    parser.add_argument("--rules", type=Path, default=None, help="Path to candidate rules JSON config")
-    parser.add_argument("--split", type=str, default=None, help="Target split filter (e.g. validation, train)")
-    parser.add_argument("--seed", type=int, default=None, help="Random seed for bounded sampling")
-    parser.add_argument("--max-candidates", type=int, default=None, help="Maximum emitted valid candidates")
-    parser.add_argument("--max-per-category", type=int, default=None, help="Maximum items sampled per category pool")
+    parser.add_argument(
+        "--input", required=True, type=Path, help="Path to input items"
+    )
+    parser.add_argument(
+        "--output", required=True, type=Path, help="Path to output report JSON"
+    )
+    parser.add_argument(
+        "--rules", type=Path, default=None, help="Path to rules JSON config"
+    )
+    parser.add_argument(
+        "--split", type=str, default=None, help="Target split filter"
+    )
+    parser.add_argument(
+        "--seed", type=int, default=None, help="Random seed for sampling"
+    )
+    parser.add_argument(
+        "--max-candidates", type=int, default=None, help="Max valid candidates"
+    )
+    parser.add_argument(
+        "--max-per-category", type=int, default=None, help="Max per category"
+    )
     args = parser.parse_args()
 
     input_path = args.input.resolve()
@@ -72,8 +87,8 @@ def main() -> int:
 
     provenance = {
         "code_revision": "v1.0.0",
-        "config_ref": str(args.rules or "configs/m3/candidate_generation_v1.json"),
-        "model_version": "none_rule_based",
+        "config_ref": str(args.rules or "configs/m3/rules_v1.json"),
+        "model_version": "rule_based",
         "cache_version": input_path.name,
     }
 
@@ -120,7 +135,10 @@ def main() -> int:
     }
 
     output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(f"Candidate generation complete: emitted {result.candidates_emitted} valid candidates from {result.eligible_item_count} eligible items.")
+    print(
+        f"Generated {result.candidates_emitted} candidates from "
+        f"{result.eligible_item_count} eligible items."
+    )
     print(f"Report written to: {output_path}")
     return 0
 

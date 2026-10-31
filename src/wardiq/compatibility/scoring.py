@@ -1,19 +1,16 @@
-"""Pairwise compatibility scoring and Outfit Compatibility Score (OCS) aggregation for Milestone 3."""
+"""Pairwise compatibility scoring and OCS aggregation for Milestone 3."""
 
 from __future__ import annotations
 
-import json
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any
 
-from wardiq.contracts import PairwiseScore, RankedOutfit, RunIdentity
+from wardiq.contracts import PairwiseScore
 
 
 @dataclass(frozen=True)
 class OutfitScoringResult:
-    """Result of scoring pairwise interactions and aggregating OCS for a candidate outfit."""
+    """Result of scoring pairwise interactions and OCS."""
 
     outfit_id: str
     item_ids: tuple[str, ...]
@@ -26,12 +23,16 @@ class OutfitScoringResult:
 def compute_pairwise_cosine_similarity(
     left_vector: Sequence[float], right_vector: Sequence[float]
 ) -> float:
-    """Compute normalized cosine similarity between two feature embeddings."""
-    if not left_vector or not right_vector or len(left_vector) != len(right_vector):
+    """Compute normalized cosine similarity between two embeddings."""
+    if not left_vector or not right_vector or len(left_vector) != len(
+        right_vector
+    ):
         return 0.0
-    dot_prod = sum(float(l) * float(r) for l, r in zip(left_vector, right_vector))
-    norm_l = sum(float(l) ** 2 for l in left_vector) ** 0.5
-    norm_r = sum(float(r) ** 2 for r in right_vector) ** 0.5
+    dot_prod = sum(
+        float(lv) * float(rv) for lv, rv in zip(left_vector, right_vector)
+    )
+    norm_l = sum(float(lv) ** 2 for lv in left_vector) ** 0.5
+    norm_r = sum(float(rv) ** 2 for rv in right_vector) ** 0.5
     if norm_l == 0.0 or norm_r == 0.0:
         return 0.0
     val = dot_prod / (norm_l * norm_r)
@@ -43,7 +44,7 @@ def score_outfit_candidate(
     item_embeddings: Mapping[str, Sequence[float]],
     relevant_pairs: Sequence[tuple[str, str]] | None = None,
 ) -> OutfitScoringResult:
-    """Score all relevant pairs in an outfit and compute the mean OCS."""
+    """Score all relevant pairs in an outfit and compute mean OCS."""
     clean_ids = tuple(str(i).strip() for i in item_ids)
     if len(clean_ids) < 2:
         return OutfitScoringResult(
@@ -55,7 +56,6 @@ def score_outfit_candidate(
             rejection_reasons=("too_few_items_for_scoring",),
         )
 
-    # If no relevant pairs specified, consider all pairs
     pairs_to_score = list(relevant_pairs) if relevant_pairs is not None else []
     if not pairs_to_score:
         sorted_unique = sorted(set(clean_ids))
@@ -72,8 +72,8 @@ def score_outfit_candidate(
         if l_vec is not None and r_vec is not None:
             prob = float(compute_pairwise_cosine_similarity(l_vec, r_vec))
         else:
-            prob = 0.5  # Neutral fallback when embeddings are absent
-        
+            prob = 0.5
+
         pairwise_scores.append(
             PairwiseScore(
                 left_item_id=left_id,
@@ -83,7 +83,11 @@ def score_outfit_candidate(
         )
         probabilities.append(prob)
 
-    ocs = round(sum(probabilities) / len(probabilities), 4) if probabilities else None
+    ocs = (
+        round(sum(probabilities) / len(probabilities), 4)
+        if probabilities
+        else None
+    )
 
     return OutfitScoringResult(
         outfit_id="",
