@@ -1,0 +1,38 @@
+{
+  "schema_version": "wardiq.m3.logistic-regression-report.v1",
+  "model": "sklearn.pipeline.Pipeline(StandardScaler, LogisticRegression)",
+  "model_parameters": {
+    "C": 1.0,
+    "max_iter": 1000,
+    "solver": "lbfgs"
+  },
+  "feature_dimension": 1214,
+  "training": {
+    "examples": 251008,
+    "positive_count": 125518,
+    "negative_count": 125490,
+    "split": "train"
+  },
+  "validation": {
+    "examples": 67869,
+    "positive_count": 33956,
+    "negative_count": 33913,
+    "threshold": 0.316801518201828,
+    "accuracy": 0.54703914894871,
+    "precision": 0.5266244739719672,
+    "recall": 0.9360937684061726,
+    "f1": 0.6740462709671947,
+    "log_loss": 0.6504122614860535,
+    "brier_score": 0.2295066863298416,
+    "roc_auc": 0.662767590635253,
+    "average_precision": 0.6639973188849693
+  },
+  "threshold_selection": {
+    "method": "maximum validation F1",
+    "selected_threshold": 0.316801518201828,
+    "validation_f1": 0.6740462709671947,
+    "test_used_for_selection": false
+  },
+  "probability_interpretation": "The model's estimated probability of label 1 under the training examples and sampling process; not a verified human judgment of outfit compatibility.",
+  "test_evaluation": null
+}

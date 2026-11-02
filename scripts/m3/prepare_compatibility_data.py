@@ -72,11 +72,7 @@ def source_paths(root):
         "source_categories": root / "categories.csv",
     }
     for split, short in SOURCE_NAMES.items():
-        result[split + "_images"] = (
-            root / "disjoint/validation-00000-of-00001.parquet"
-            if split == "validation"
-            else root / f"data/disjoint/{split}.parquet"
-        )
+        result[split + "_images"] = root / f"data/disjoint/{split}.parquet"
         result[split + "_outfits"] = root / f"disjoint/{short}.json"
         result[split + "_compatibility"] = root / f"disjoint/compatibility_{short}.txt"
         result[split + "_fitb"] = root / f"disjoint/fill_in_blank_{short}.json"
