@@ -188,6 +188,19 @@ def test_audit_only_does_not_make_a_category_decision(source):
     assert all(report["split_summary"][s]["eligible_items"] == 4 for s in data.SPLITS)
 
 
+@pytest.mark.parametrize("keep_legacy", [False, True])
+def test_audit_accepts_recovered_validation_layout(source, keep_legacy):
+    legacy = source.source_root / "disjoint/validation-00000-of-00001.parquet"
+    recovered = source.source_root / "data/disjoint/validation.parquet"
+    recovered.write_bytes(legacy.read_bytes())
+    if not keep_legacy:
+        legacy.unlink()
+    assert data.source_paths(source.source_root)["validation_images"] == recovered
+    report = data.build(source)
+    assert report["source_files_unchanged"] is True
+    assert all(report["split_summary"][s]["eligible_items"] == 4 for s in data.SPLITS)
+
+
 def test_real_pipeline_reports_missing_training_cache_and_is_repeatable(source):
     source.stage = "pairs"
     first = data.build(source)
