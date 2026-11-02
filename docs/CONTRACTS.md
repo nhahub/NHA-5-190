@@ -57,3 +57,19 @@ the CI Python 3.10 job verifies minimum-version compatibility. A
 `TypedDict` alone does not verify file existence, item references, equal vector
 lengths, probability bounds, or formula correctness. CI passing does not freeze
 these drafts or supply any pending teammate implementation.
+
+## M3 rule baseline status
+
+The rule-based compatibility baseline is experimental and is not an
+approved scoring contract. Its current weights, score mapping, and
+missing-color behavior are provisional and require producer and
+downstream reviewer approval.
+
+The baseline returns a heuristic score, not a calibrated probability.
+The current `PairwiseScore.probability` field must not be interpreted
+as the baseline output without an explicit contract decision.
+
+Before freezing M3-to-M4, the owners must agree on pair-score semantics,
+score range, OCS aggregation, structural validity, Top-K behavior,
+tie-breaking, missing-item handling, and provenance. Until then,
+the shared output types remain draft interfaces.
