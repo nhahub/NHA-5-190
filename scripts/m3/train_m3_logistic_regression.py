@@ -32,7 +32,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 
-def load_split(directory: Path, expected_split: str) -> tuple[np.ndarray, np.ndarray, list[dict[str, str]]]:
+def load_split(
+    directory: Path, expected_split: str
+) -> tuple[np.ndarray, np.ndarray, list[dict[str, str]]]:
     directory = directory.resolve()
     features_path = directory / "features.npy"
     labels_path = directory / "labels.npy"
@@ -144,7 +146,10 @@ def main() -> None:
     parser.add_argument(
         "--evaluate-test",
         action="store_true",
-        help="Evaluate test using the threshold selected on validation; do this only after protocol lock.",
+        help=(
+            "Evaluate test using the threshold selected on validation; "
+            "do this only after protocol lock."
+        ),
     )
     args = parser.parse_args()
 
