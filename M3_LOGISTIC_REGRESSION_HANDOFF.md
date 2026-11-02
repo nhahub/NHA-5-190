@@ -41,6 +41,13 @@ StandardScaler + LogisticRegression.
 - validation_predictions.csv
 - calibration_report.json
 
+Generated artifacts belong outside Git under the repository artifact policy.
+The files above remain in the local ignored directory
+`artifacts/m3/development_experiments/hayat_logistic_regression_v1/`.
+The original PR commit `331652e032c2c0d72f9dc3d3414b0b1374966e90` also retains the
+original artifacts in Git history. A team-accessible artifact location is still
+needed before treating the model as delivered to all collaborators.
+
 ## Calibration
 Calibration was assessed using 10 validation reliability bins and the Brier score.
 The available evidence does not establish that the predicted probabilities are calibrated.
