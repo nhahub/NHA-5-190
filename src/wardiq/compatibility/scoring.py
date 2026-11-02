@@ -24,18 +24,14 @@ def compute_pairwise_cosine_similarity(
     left_vector: Sequence[float], right_vector: Sequence[float]
 ) -> float:
     """Compute normalized cosine similarity between two embeddings."""
-    if not left_vector or not right_vector or len(left_vector) != len(
-        right_vector
-    ):
+    if not left_vector or not right_vector or len(left_vector) != len(right_vector):
         return 0.0
-    dot_prod = sum(
-        float(lv) * float(rv) for lv, rv in zip(left_vector, right_vector)
-    )
+    dot_prod = sum(float(lv) * float(rv) for lv, rv in zip(left_vector, right_vector))
     norm_l = sum(float(lv) ** 2 for lv in left_vector) ** 0.5
     norm_r = sum(float(rv) ** 2 for rv in right_vector) ** 0.5
     if norm_l == 0.0 or norm_r == 0.0:
         return 0.0
-    val = dot_prod / (norm_l * norm_r)
+    val: float = dot_prod / (norm_l * norm_r)
     return max(-1.0, min(1.0, val))
 
 
@@ -83,11 +79,7 @@ def score_outfit_candidate(
         )
         probabilities.append(prob)
 
-    ocs = (
-        round(sum(probabilities) / len(probabilities), 4)
-        if probabilities
-        else None
-    )
+    ocs = round(sum(probabilities) / len(probabilities), 4) if probabilities else None
 
     return OutfitScoringResult(
         outfit_id="",

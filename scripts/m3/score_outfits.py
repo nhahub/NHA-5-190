@@ -11,12 +11,8 @@ from wardiq.compatibility.scoring import score_outfit_candidate
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--candidates", required=True, type=Path, help="Candidates JSON"
-    )
-    parser.add_argument(
-        "--output", required=True, type=Path, help="Output scored JSON"
-    )
+    parser.add_argument("--candidates", required=True, type=Path, help="Candidates JSON")
+    parser.add_argument("--output", required=True, type=Path, help="Output scored JSON")
     args = parser.parse_args()
 
     candidates_path = args.candidates.resolve()
@@ -33,9 +29,7 @@ def main() -> int:
         result = score_outfit_candidate(item_ids, mock_embeddings)
 
         scored = dict(cand)
-        scored["pairwise_scores"] = [
-            dict(ps) for ps in result.pairwise_scores
-        ]
+        scored["pairwise_scores"] = [dict(ps) for ps in result.pairwise_scores]
         scored["ocs"] = result.ocs
         scored_outfits.append(scored)
 

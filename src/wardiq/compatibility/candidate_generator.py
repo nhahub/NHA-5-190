@@ -77,8 +77,7 @@ class CandidateOutfitRecord:
         base["template_id"] = self.template_id
         base["categories"] = list(self.categories)
         base["relevant_pairs"] = [
-            {"left_item_id": left, "right_item_id": right}
-            for left, right in self.relevant_pairs
+            {"left_item_id": left, "right_item_id": right} for left, right in self.relevant_pairs
         ]
         base["target_split"] = self.target_split
         base["config_version"] = self.config_version
@@ -335,10 +334,9 @@ def evaluate_candidate_combination(
     if len(categories) != len(resolved_items):
         reasons.append("unmapped_item_in_outfit")
 
-    if (
-        rules.get("category_policy", {}).get("reject_duplicate_categories_in_outfit", True)
-        and len(categories) != len(set(categories))
-    ):
+    if rules.get("category_policy", {}).get("reject_duplicate_categories_in_outfit", True) and len(
+        categories
+    ) != len(set(categories)):
         reasons.append("duplicate_category_slot")
 
     cat_set = set(categories)
@@ -354,9 +352,7 @@ def evaluate_candidate_combination(
             matched_template = str(template["template_id"])
             break
 
-    if matched_template is None and not any(
-        r.startswith("unresolved_item_id") for r in reasons
-    ):
+    if matched_template is None and not any(r.startswith("unresolved_item_id") for r in reasons):
         if "footwear" not in cat_set:
             reasons.append("missing_required_footwear")
         if "one_piece" not in cat_set and not {"top", "bottom"}.issubset(cat_set):
@@ -491,16 +487,12 @@ def generate_candidates(
             req_cats = list(template.get("required_categories", []))
             if any(len(bounded_by_category.get(cat, [])) == 0 for cat in req_cats):
                 reason = f"missing_category_pool:{template['template_id']}"
-                candidate_rejection_counts[reason] = (
-                    candidate_rejection_counts.get(reason, 0) + 1
-                )
+                candidate_rejection_counts[reason] = candidate_rejection_counts.get(reason, 0) + 1
                 continue
             pools = [bounded_by_category[cat] for cat in req_cats]
             for prod in itertools.product(*pools):
                 combo_ids = [item.item_id for item in prod]
-                evaluated = evaluate_candidate_combination(
-                    combo_ids, eligible_lookup, loaded_rules
-                )
+                evaluated = evaluate_candidate_combination(combo_ids, eligible_lookup, loaded_rules)
                 if evaluated.structurally_valid:
                     if evaluated.outfit_id not in seen_outfit_ids:
                         seen_outfit_ids.add(evaluated.outfit_id)
@@ -523,9 +515,7 @@ def generate_candidates(
 
         for cand in valid_candidates:
             if cand.template_id:
-                template_counts[cand.template_id] = (
-                    template_counts.get(cand.template_id, 0) + 1
-                )
+                template_counts[cand.template_id] = template_counts.get(cand.template_id, 0) + 1
 
     return CandidateGenerationResult(
         config_version=str(loaded_rules["config_version"]),

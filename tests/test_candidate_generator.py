@@ -76,9 +76,7 @@ def test_filter_eligible_items():
             "target_split": "train",
         },
     ]
-    eligible, rejections, _ = filter_eligible_items(
-        records, rules, target_split="train"
-    )
+    eligible, rejections, _ = filter_eligible_items(records, rules, target_split="train")
     assert "item_valid" in eligible
     assert "item_invalid_status" not in eligible
     assert "item_missing_cat" not in eligible

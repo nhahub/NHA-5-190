@@ -55,27 +55,13 @@ def load_items_from_source(path: Path) -> list[dict[str, Any]]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--input", required=True, type=Path, help="Path to input items"
-    )
-    parser.add_argument(
-        "--output", required=True, type=Path, help="Path to output report JSON"
-    )
-    parser.add_argument(
-        "--rules", type=Path, default=None, help="Path to rules JSON config"
-    )
-    parser.add_argument(
-        "--split", type=str, default=None, help="Target split filter"
-    )
-    parser.add_argument(
-        "--seed", type=int, default=None, help="Random seed for sampling"
-    )
-    parser.add_argument(
-        "--max-candidates", type=int, default=None, help="Max valid candidates"
-    )
-    parser.add_argument(
-        "--max-per-category", type=int, default=None, help="Max per category"
-    )
+    parser.add_argument("--input", required=True, type=Path, help="Path to input items")
+    parser.add_argument("--output", required=True, type=Path, help="Path to output report JSON")
+    parser.add_argument("--rules", type=Path, default=None, help="Path to rules JSON config")
+    parser.add_argument("--split", type=str, default=None, help="Target split filter")
+    parser.add_argument("--seed", type=int, default=None, help="Random seed for sampling")
+    parser.add_argument("--max-candidates", type=int, default=None, help="Max valid candidates")
+    parser.add_argument("--max-per-category", type=int, default=None, help="Max per category")
     args = parser.parse_args()
 
     input_path = args.input.resolve()
@@ -129,9 +115,7 @@ def main() -> int:
             }
             for rej in result.item_rejections
         ],
-        "valid_candidates": [
-            cand.to_dict(provenance) for cand in result.valid_candidates
-        ],
+        "valid_candidates": [cand.to_dict(provenance) for cand in result.valid_candidates],
     }
 
     output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
