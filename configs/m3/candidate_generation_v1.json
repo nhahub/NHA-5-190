@@ -1,0 +1,98 @@
+{
+  "schema_version": "wardiq.m3.candidate-rules.v1",
+  "config_version": "1.0.0",
+  "status": "provisional_pending_review",
+  "category_vocabulary": [
+    "top",
+    "bottom",
+    "one_piece",
+    "outerwear",
+    "footwear",
+    "bag",
+    "headwear",
+    "eyewear",
+    "scarf",
+    "jewellery",
+    "accessory_other"
+  ],
+  "allowed_mapping_statuses": [
+    "direct",
+    "approximate"
+  ],
+  "rejected_mapping_statuses": [
+    "unmapped",
+    "not_a_garment",
+    "ambiguous"
+  ],
+  "category_policy": {
+    "source_authority": "source_categories_via_m1_taxonomy_v1.0.0",
+    "classifier_claim": "none_source_metadata_only",
+    "require_single_split": true,
+    "reject_duplicate_item_ids": true,
+    "reject_duplicate_categories_in_outfit": true,
+    "mutually_exclusive_groups": [
+      ["top", "one_piece"],
+      ["bottom", "one_piece"]
+    ]
+  },
+  "outfit_templates": [
+    {
+      "template_id": "separates_core",
+      "description": "Minimum separates structure: top + bottom + footwear",
+      "required_categories": ["top", "bottom", "footwear"],
+      "optional_categories": []
+    },
+    {
+      "template_id": "separates_outerwear",
+      "description": "Separates with outerwear: top + bottom + outerwear + footwear",
+      "required_categories": ["top", "bottom", "outerwear", "footwear"],
+      "optional_categories": []
+    },
+    {
+      "template_id": "separates_bag",
+      "description": "Separates with bag: top + bottom + footwear + bag",
+      "required_categories": ["top", "bottom", "footwear", "bag"],
+      "optional_categories": []
+    },
+    {
+      "template_id": "one_piece_core",
+      "description": "Minimum one-piece structure: one_piece + footwear",
+      "required_categories": ["one_piece", "footwear"],
+      "optional_categories": []
+    },
+    {
+      "template_id": "one_piece_outerwear",
+      "description": "One-piece with outerwear: one_piece + outerwear + footwear",
+      "required_categories": ["one_piece", "outerwear", "footwear"],
+      "optional_categories": []
+    },
+    {
+      "template_id": "one_piece_bag",
+      "description": "One-piece with bag: one_piece + footwear + bag",
+      "required_categories": ["one_piece", "footwear", "bag"],
+      "optional_categories": []
+    }
+  ],
+  "relevant_category_pairs": [
+    ["bottom", "top"],
+    ["footwear", "top"],
+    ["bottom", "footwear"],
+    ["outerwear", "top"],
+    ["bottom", "outerwear"],
+    ["footwear", "outerwear"],
+    ["bag", "top"],
+    ["bag", "bottom"],
+    ["bag", "footwear"],
+    ["bag", "outerwear"],
+    ["footwear", "one_piece"],
+    ["one_piece", "outerwear"],
+    ["bag", "one_piece"]
+  ],
+  "enumeration_defaults": {
+    "seed": 42,
+    "max_candidates": 250,
+    "max_items_per_category": 30,
+    "min_items_per_outfit": 2,
+    "max_items_per_outfit": 5
+  }
+}
