@@ -182,6 +182,8 @@ def test_unknown_category_feature_fails_loudly() -> None:
     ]
     with pytest.raises(ValueError):
         score_pair_features(feature_names=names, feature_values=[1, 1, 0.5, 0, 0])
+
+
 @pytest.mark.parametrize("bad_flag", [-1.0, 0.5, 2.0])
 def test_invalid_category_flag_raises(bad_flag: float) -> None:
     values = make_row()
