@@ -1,0 +1,88 @@
+{
+  "contract_version": "0.1.0",
+  "versions": {
+    "model": "STUB",
+    "cache": "STUB",
+    "config": "0.1.0"
+  },
+  "calibration": {
+    "status": "not_provided",
+    "evidence": null
+  },
+  "outfits": [
+    {
+      "outfit_id": "outfit_1",
+      "item_ids": [
+        "t1",
+        "b1",
+        "f1"
+      ],
+      "ocs": 0.7000000000000001,
+      "status": "ok",
+      "pairs": [
+        {
+          "pair_id": "b1|t1",
+          "item_a": "b1",
+          "item_b": "t1",
+          "score": 0.8
+        },
+        {
+          "pair_id": "f1|t1",
+          "item_a": "f1",
+          "item_b": "t1",
+          "score": 0.6
+        },
+        {
+          "pair_id": "b1|f1",
+          "item_a": "b1",
+          "item_b": "f1",
+          "score": 0.7
+        }
+      ],
+      "excluded": []
+    },
+    {
+      "outfit_id": "outfit_2",
+      "item_ids": [
+        "t2",
+        "b2",
+        "f2"
+      ],
+      "ocs": 0.5,
+      "status": "ok",
+      "pairs": [
+        {
+          "pair_id": "b2|t2",
+          "item_a": "b2",
+          "item_b": "t2",
+          "score": 0.4
+        },
+        {
+          "pair_id": "f2|t2",
+          "item_a": "f2",
+          "item_b": "t2",
+          "score": 0.5
+        },
+        {
+          "pair_id": "b2|f2",
+          "item_a": "b2",
+          "item_b": "f2",
+          "score": 0.6
+        }
+      ],
+      "excluded": []
+    }
+  ],
+  "top_k": [
+    {
+      "rank": 1,
+      "outfit_id": "outfit_1",
+      "ocs": 0.7000000000000001
+    },
+    {
+      "rank": 2,
+      "outfit_id": "outfit_2",
+      "ocs": 0.5
+    }
+  ]
+}
