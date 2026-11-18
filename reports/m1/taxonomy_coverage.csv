@@ -1,0 +1,184 @@
+source_dataset,source_category_id,source_label,records_with_category,common_category,mapping_status
+Fashion-MNIST,0,T-shirt/top,7000,top,direct
+Fashion-MNIST,1,Trouser,7000,bottom,direct
+Fashion-MNIST,2,Pullover,7000,top,direct
+Fashion-MNIST,3,Dress,7000,one_piece,direct
+Fashion-MNIST,4,Coat,7000,outerwear,direct
+Fashion-MNIST,5,Sandal,7000,footwear,direct
+Fashion-MNIST,6,Shirt,7000,top,direct
+Fashion-MNIST,7,Sneaker,7000,footwear,direct
+Fashion-MNIST,8,Bag,7000,bag,direct
+Fashion-MNIST,9,Ankle boot,7000,footwear,direct
+Fashionpedia,0,"shirt, blouse",102,top,direct
+Fashionpedia,1,"top, t-shirt, sweatshirt",463,top,direct
+Fashionpedia,2,sweater,21,top,direct
+Fashionpedia,3,cardigan,12,top,ambiguous
+Fashionpedia,4,jacket,179,outerwear,direct
+Fashionpedia,5,vest,21,outerwear,ambiguous
+Fashionpedia,6,pants,313,bottom,direct
+Fashionpedia,7,shorts,106,bottom,direct
+Fashionpedia,8,skirt,162,bottom,direct
+Fashionpedia,9,coat,103,outerwear,direct
+Fashionpedia,10,dress,506,one_piece,direct
+Fashionpedia,11,jumpsuit,21,one_piece,direct
+Fashionpedia,12,cape,5,outerwear,approximate
+Fashionpedia,13,glasses,130,eyewear,direct
+Fashionpedia,14,hat,74,headwear,direct
+Fashionpedia,15,"headband, head covering, hair accessory",105,headwear,approximate
+Fashionpedia,16,tie,3,accessory_other,approximate
+Fashionpedia,17,glove,18,accessory_other,approximate
+Fashionpedia,18,watch,82,accessory_other,ambiguous
+Fashionpedia,19,belt,159,accessory_other,approximate
+Fashionpedia,20,leg warmer,7,,unmapped
+Fashionpedia,21,"tights, stockings",62,,unmapped
+Fashionpedia,22,sock,51,,unmapped
+Fashionpedia,23,shoe,804,footwear,direct
+Fashionpedia,24,"bag, wallet",205,bag,direct
+Fashionpedia,25,scarf,48,scarf,direct
+Fashionpedia,26,umbrella,5,accessory_other,approximate
+Fashionpedia,27,hood,32,,not_a_garment
+Fashionpedia,28,collar,208,,not_a_garment
+Fashionpedia,29,lapel,132,,not_a_garment
+Fashionpedia,30,epaulette,7,,not_a_garment
+Fashionpedia,31,sleeve,742,,not_a_garment
+Fashionpedia,32,pocket,288,,not_a_garment
+Fashionpedia,33,neckline,895,,not_a_garment
+Fashionpedia,34,buckle,64,,not_a_garment
+Fashionpedia,35,zipper,105,,not_a_garment
+Fashionpedia,36,applique,28,,not_a_garment
+Fashionpedia,37,bead,33,,not_a_garment
+Fashionpedia,38,bow,5,,not_a_garment
+Fashionpedia,39,flower,6,,not_a_garment
+Fashionpedia,40,fringe,11,,not_a_garment
+Fashionpedia,41,ribbon,5,,not_a_garment
+Fashionpedia,42,rivet,55,,not_a_garment
+Fashionpedia,43,ruffle,59,,not_a_garment
+Fashionpedia,44,sequin,7,,not_a_garment
+Fashionpedia,45,tassel,7,,not_a_garment
+Polyvore Outfits,3,all-body,63,one_piece,approximate
+Polyvore Outfits,4,all-body,623,one_piece,approximate
+Polyvore Outfits,5,all-body,127,one_piece,approximate
+Polyvore Outfits,6,all-body,54,one_piece,approximate
+Polyvore Outfits,7,bottoms,49,bottom,direct
+Polyvore Outfits,8,bottoms,126,bottom,direct
+Polyvore Outfits,9,bottoms,306,bottom,direct
+Polyvore Outfits,10,bottoms,53,bottom,direct
+Polyvore Outfits,11,tops,522,top,direct
+Polyvore Outfits,15,tops,24,top,direct
+Polyvore Outfits,17,tops,297,top,direct
+Polyvore Outfits,18,outerwear,77,outerwear,direct
+Polyvore Outfits,19,tops,243,top,direct
+Polyvore Outfits,21,tops,287,top,direct
+Polyvore Outfits,23,outerwear,29,outerwear,direct
+Polyvore Outfits,24,outerwear,268,outerwear,direct
+Polyvore Outfits,25,outerwear,354,outerwear,direct
+Polyvore Outfits,26,tops,29,top,direct
+Polyvore Outfits,27,bottoms,112,bottom,direct
+Polyvore Outfits,28,bottoms,253,bottom,direct
+Polyvore Outfits,29,bottoms,270,bottom,direct
+Polyvore Outfits,31,bottoms,7,bottom,direct
+Polyvore Outfits,35,bags,37,bag,direct
+Polyvore Outfits,36,bags,402,bag,direct
+Polyvore Outfits,37,bags,776,bag,direct
+Polyvore Outfits,38,bags,453,bag,direct
+Polyvore Outfits,39,bags,47,bag,direct
+Polyvore Outfits,40,bags,85,bag,direct
+Polyvore Outfits,41,shoes,213,footwear,direct
+Polyvore Outfits,42,shoes,91,footwear,direct
+Polyvore Outfits,43,shoes,437,footwear,direct
+Polyvore Outfits,46,shoes,974,footwear,direct
+Polyvore Outfits,47,shoes,145,footwear,direct
+Polyvore Outfits,48,shoes,37,footwear,direct
+Polyvore Outfits,49,shoes,330,footwear,direct
+Polyvore Outfits,50,shoes,46,footwear,direct
+Polyvore Outfits,51,scarves,93,scarf,direct
+Polyvore Outfits,52,accessories,94,accessory_other,approximate
+Polyvore Outfits,53,accessories,33,accessory_other,approximate
+Polyvore Outfits,55,hats,354,headwear,direct
+Polyvore Outfits,56,accessories,1,accessory_other,approximate
+Polyvore Outfits,57,sunglasses,704,eyewear,approximate
+Polyvore Outfits,58,accessories,118,accessory_other,approximate
+Polyvore Outfits,59,accessories,17,accessory_other,approximate
+Polyvore Outfits,61,jewellery,185,jewellery,direct
+Polyvore Outfits,62,jewellery,518,jewellery,direct
+Polyvore Outfits,64,jewellery,870,jewellery,direct
+Polyvore Outfits,65,jewellery,312,jewellery,direct
+Polyvore Outfits,68,accessories,1,accessory_other,approximate
+Polyvore Outfits,69,accessories,39,accessory_other,approximate
+Polyvore Outfits,104,tops,197,top,direct
+Polyvore Outfits,105,scarves,164,scarf,direct
+Polyvore Outfits,106,jewellery,450,jewellery,direct
+Polyvore Outfits,107,jewellery,34,jewellery,direct
+Polyvore Outfits,236,outerwear,104,outerwear,direct
+Polyvore Outfits,237,bottoms,168,bottom,direct
+Polyvore Outfits,238,bottoms,11,bottom,direct
+Polyvore Outfits,239,bottoms,10,bottom,direct
+Polyvore Outfits,240,bottoms,52,bottom,direct
+Polyvore Outfits,241,bottoms,51,bottom,direct
+Polyvore Outfits,243,all-body,41,one_piece,approximate
+Polyvore Outfits,244,all-body,39,one_piece,approximate
+Polyvore Outfits,249,bottoms,11,bottom,direct
+Polyvore Outfits,250,tops,6,top,direct
+Polyvore Outfits,251,accessories,16,accessory_other,approximate
+Polyvore Outfits,252,tops,6,top,direct
+Polyvore Outfits,253,bottoms,30,bottom,direct
+Polyvore Outfits,255,bottoms,9,bottom,direct
+Polyvore Outfits,256,tops,4,top,direct
+Polyvore Outfits,257,tops,22,top,direct
+Polyvore Outfits,258,bags,31,bag,direct
+Polyvore Outfits,259,bags,206,bag,direct
+Polyvore Outfits,260,bags,3,bag,direct
+Polyvore Outfits,261,shoes,287,footwear,direct
+Polyvore Outfits,262,shoes,6,footwear,direct
+Polyvore Outfits,263,shoes,31,footwear,direct
+Polyvore Outfits,264,shoes,20,footwear,direct
+Polyvore Outfits,265,shoes,43,footwear,direct
+Polyvore Outfits,266,shoes,31,footwear,direct
+Polyvore Outfits,267,shoes,10,footwear,direct
+Polyvore Outfits,268,shoes,18,footwear,direct
+Polyvore Outfits,270,accessories,1,accessory_other,approximate
+Polyvore Outfits,275,tops,5,top,direct
+Polyvore Outfits,277,outerwear,1,outerwear,direct
+Polyvore Outfits,278,bottoms,11,bottom,direct
+Polyvore Outfits,281,all-body,1,one_piece,approximate
+Polyvore Outfits,287,bottoms,2,bottom,direct
+Polyvore Outfits,290,bags,2,bag,direct
+Polyvore Outfits,291,shoes,8,footwear,direct
+Polyvore Outfits,292,shoes,3,footwear,direct
+Polyvore Outfits,293,shoes,1,footwear,direct
+Polyvore Outfits,296,shoes,2,footwear,direct
+Polyvore Outfits,297,shoes,3,footwear,direct
+Polyvore Outfits,299,accessories,1,accessory_other,approximate
+Polyvore Outfits,300,accessories,2,accessory_other,approximate
+Polyvore Outfits,301,accessories,1,accessory_other,approximate
+Polyvore Outfits,302,accessories,2,accessory_other,approximate
+Polyvore Outfits,303,hats,8,headwear,direct
+Polyvore Outfits,304,sunglasses,8,eyewear,approximate
+Polyvore Outfits,305,jewellery,7,jewellery,direct
+Polyvore Outfits,307,jewellery,1,jewellery,direct
+Polyvore Outfits,309,tops,7,top,direct
+Polyvore Outfits,310,bottoms,19,bottom,direct
+Polyvore Outfits,315,tops,15,top,direct
+Polyvore Outfits,318,bags,433,bag,direct
+Polyvore Outfits,332,bottoms,64,bottom,direct
+Polyvore Outfits,341,tops,1,top,direct
+Polyvore Outfits,1605,all-body,73,one_piece,approximate
+Polyvore Outfits,1606,all-body,75,one_piece,approximate
+Polyvore Outfits,1607,outerwear,25,outerwear,direct
+Polyvore Outfits,4452,bottoms,16,bottom,direct
+Polyvore Outfits,4454,tops,5,top,direct
+Polyvore Outfits,4455,outerwear,2,outerwear,direct
+Polyvore Outfits,4456,outerwear,2,outerwear,direct
+Polyvore Outfits,4458,bottoms,5,bottom,direct
+Polyvore Outfits,4459,bottoms,1,bottom,direct
+Polyvore Outfits,4460,accessories,3,accessory_other,approximate
+Polyvore Outfits,4461,bags,1,bag,direct
+Polyvore Outfits,4462,bags,2,bag,direct
+Polyvore Outfits,4463,accessories,2,accessory_other,approximate
+Polyvore Outfits,4466,jewellery,1,jewellery,direct
+Polyvore Outfits,4467,accessories,3,accessory_other,approximate
+Polyvore Outfits,4472,accessories,5,accessory_other,approximate
+Polyvore Outfits,4495,tops,67,top,direct
+Polyvore Outfits,4496,tops,39,top,direct
+Polyvore Outfits,4517,tops,21,top,direct
+Polyvore Outfits,4518,bottoms,4,bottom,direct

@@ -1,0 +1,12 @@
+[
+  {"outfit_id": "outfit_a", "items": [
+    {"item_id": "t1", "category": "top"}, {"item_id": "b1", "category": "bottom"}, {"item_id": "f1", "category": "footwear"}]},
+  {"outfit_id": "outfit_b", "items": [
+    {"item_id": "t2", "category": "top"}, {"item_id": "b2", "category": "bottom"}, {"item_id": "f2", "category": "footwear"}]},
+  {"outfit_id": "outfit_c_copy_of_a", "items": [
+    {"item_id": "f1", "category": "footwear"}, {"item_id": "t1", "category": "top"}, {"item_id": "b1", "category": "bottom"}]},
+  {"outfit_id": "outfit_d_missing_item", "items": [
+    {"item_id": "t3", "category": "top"}, {"item_id": "zz", "category": "bottom"}]},
+  {"outfit_id": "outfit_e_no_pair", "items": [
+    {"item_id": "t4", "category": "top"}, {"item_id": "t5", "category": "top"}]}
+]
