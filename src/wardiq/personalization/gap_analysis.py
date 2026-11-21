@@ -38,7 +38,8 @@ def load_gap_analysis_config(path: str | Path | None = None) -> dict[str, Any]:
     """Load the versioned M4 wardrobe gap analysis configuration."""
     config_path = Path(path) if path is not None else DEFAULT_GAP_CONFIG_PATH
     with config_path.open("r", encoding="utf-8") as handle:
-        return json.load(handle)
+        data: dict[str, Any] = json.load(handle)
+        return data
 
 
 @dataclass(frozen=True, slots=True)
@@ -372,17 +373,11 @@ def analyze_wardrobe_gaps(
     )
     baseline_outfit_ids = {c.outfit_id for c in baseline_gen.valid_candidates}
     baseline_scores, _ = _score_outfits(baseline_gen.valid_candidates, item_embeddings)
-    baseline_useful = sum(
-        1
-        for outfit in baseline_gen.valid_candidates
-        if (
-            baseline_scores[outfit.outfit_id] is None
-            or (
-                baseline_scores[outfit.outfit_id].ocs is not None
-                and baseline_scores[outfit.outfit_id].ocs >= min_useful_ocs
-            )
-        )
-    )
+    baseline_useful = 0
+    for outfit in baseline_gen.valid_candidates:
+        score = baseline_scores[outfit.outfit_id]
+        if score is None or (score.ocs is not None and score.ocs >= min_useful_ocs):
+            baseline_useful += 1
 
     present_categories = {
         item.common_category for item in wardrobe_items if item.common_category in valid_vocab
@@ -482,7 +477,15 @@ def analyze_wardrobe_gaps(
             min_ocs = round(min(useful_ocs_values), 6) if useful_ocs_values else None
             max_ocs = round(max(useful_ocs_values), 6) if useful_ocs_values else None
 
-            unlocked_templates = tuple(sorted({outfit.template_id for outfit in useful_outfits}))
+            unlocked_templates = tuple(
+                sorted(
+                    {
+                        outfit.template_id
+                        for outfit in useful_outfits
+                        if outfit.template_id is not None
+                    }
+                )
+            )
             evidence = CompatibilityEvidence(
                 unlocked_outfit_ids=tuple(sorted(outfit.outfit_id for outfit in useful_outfits)),
                 unlocked_templates=unlocked_templates,
