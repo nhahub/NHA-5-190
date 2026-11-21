@@ -238,9 +238,7 @@ def _assess_redundancy(
     if existing_cat_count >= max_saturation:
         reasons.append("category_saturated")
 
-    saturation_ratio = (
-        min(1.0, existing_cat_count / max_saturation) if max_saturation > 0 else 0.0
-    )
+    saturation_ratio = min(1.0, existing_cat_count / max_saturation) if max_saturation > 0 else 0.0
     signals = [saturation_ratio]
     if max_emb_sim is not None:
         signals.append(max(0.0, min(1.0, max_emb_sim)))
@@ -362,9 +360,7 @@ def analyze_wardrobe_gaps(
         rec if isinstance(rec, CandidateItem) else normalize_item_record(rec)
         for rec in wardrobe_records
     ]
-    baseline_split = (
-        wardrobe_items[0].target_split if wardrobe_items else "train"
-    )
+    baseline_split = wardrobe_items[0].target_split if wardrobe_items else "train"
 
     # Baseline feasible outfits from M3
     baseline_gen = generate_candidates(
@@ -389,13 +385,9 @@ def analyze_wardrobe_gaps(
     )
 
     present_categories = {
-        item.common_category
-        for item in wardrobe_items
-        if item.common_category in valid_vocab
+        item.common_category for item in wardrobe_items if item.common_category in valid_vocab
     }
-    missing_categories = tuple(
-        cat for cat in template_active if cat not in present_categories
-    )
+    missing_categories = tuple(cat for cat in template_active if cat not in present_categories)
 
     # Build candidate list to simulate
     candidates_to_eval: list[tuple[CandidateItem, bool]] = []
@@ -404,9 +396,7 @@ def analyze_wardrobe_gaps(
     if candidate_pool is not None:
         for raw_cand in candidate_pool:
             cand = (
-                raw_cand
-                if isinstance(raw_cand, CandidateItem)
-                else normalize_item_record(raw_cand)
+                raw_cand if isinstance(raw_cand, CandidateItem) else normalize_item_record(raw_cand)
             )
             if cand.common_category not in valid_vocab:
                 rejected_candidates.append(
@@ -470,8 +460,7 @@ def analyze_wardrobe_gaps(
             new_outfits = [
                 outfit
                 for outfit in sim_gen.valid_candidates
-                if cand.item_id in outfit.item_ids
-                and outfit.outfit_id not in baseline_outfit_ids
+                if cand.item_id in outfit.item_ids and outfit.outfit_id not in baseline_outfit_ids
             ]
             scored_map, scoring_mode = _score_outfits(new_outfits, item_embeddings)
 
@@ -493,13 +482,9 @@ def analyze_wardrobe_gaps(
             min_ocs = round(min(useful_ocs_values), 6) if useful_ocs_values else None
             max_ocs = round(max(useful_ocs_values), 6) if useful_ocs_values else None
 
-            unlocked_templates = tuple(
-                sorted({outfit.template_id for outfit in useful_outfits})
-            )
+            unlocked_templates = tuple(sorted({outfit.template_id for outfit in useful_outfits}))
             evidence = CompatibilityEvidence(
-                unlocked_outfit_ids=tuple(
-                    sorted(outfit.outfit_id for outfit in useful_outfits)
-                ),
+                unlocked_outfit_ids=tuple(sorted(outfit.outfit_id for outfit in useful_outfits)),
                 unlocked_templates=unlocked_templates,
                 incremental_feasible_combinations=len(new_outfits),
                 incremental_useful_combinations=len(useful_outfits),
@@ -520,9 +505,7 @@ def analyze_wardrobe_gaps(
                     normalized_gain=0.0,
                     evidence=evidence,
                     redundancy=redundancy,
-                    explanation=_build_explanation(
-                        str(cand.common_category), evidence, redundancy
-                    ),
+                    explanation=_build_explanation(str(cand.common_category), evidence, redundancy),
                     wardrobe_ref=wardrobe_ref,
                     config_ref=config_ref,
                 )
@@ -550,9 +533,7 @@ def analyze_wardrobe_gaps(
     scored_records: list[GapCandidateRecord] = []
     for cand, is_synth, evidence, redundancy in preliminary_non_redundant:
         norm_gain = (
-            round(evidence.incremental_useful_combinations / max_gain, 6)
-            if max_gain > 0
-            else 0.0
+            round(evidence.incremental_useful_combinations / max_gain, 6) if max_gain > 0 else 0.0
         )
         if evidence.avg_ocs is not None and not math.isnan(evidence.avg_ocs):
             raw_score = (
@@ -573,9 +554,7 @@ def analyze_wardrobe_gaps(
                 normalized_gain=norm_gain,
                 evidence=evidence,
                 redundancy=redundancy,
-                explanation=_build_explanation(
-                    str(cand.common_category), evidence, redundancy
-                ),
+                explanation=_build_explanation(str(cand.common_category), evidence, redundancy),
                 wardrobe_ref=wardrobe_ref,
                 config_ref=config_ref,
             )

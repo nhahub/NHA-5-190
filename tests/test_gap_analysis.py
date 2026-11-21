@@ -116,8 +116,8 @@ def test_redundancy_handling_exact_embedding_attribute_and_saturation() -> None:
         _make_item("shoe_1", "footwear"),
     ]
     candidates = [
-        _make_item("top_1", "top"),          # exact item_id match
-        _make_item("top_4", "top"),          # category saturated (3 >= 3)
+        _make_item("top_1", "top"),  # exact item_id match
+        _make_item("top_4", "top"),  # category saturated (3 >= 3)
         _make_item("bottom_dup", "bottom"),  # high embedding + attribute overlap
     ]
     embeddings = {
