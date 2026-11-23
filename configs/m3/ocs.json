@@ -3,13 +3,38 @@
   "status": "PROPOSED - category pairs still need agreement with Omar and Asmaa",
   "ocs": "arithmetic mean of the scores of the pairs below (unweighted)",
   "relevant_category_pairs": [
-    ["top", "bottom"],
-    ["top", "footwear"],
-    ["bottom", "footwear"],
-    ["top", "outerwear"],
-    ["bottom", "outerwear"],
-    ["outerwear", "footwear"],
-    ["one_piece", "footwear"],
-    ["one_piece", "outerwear"]
-  ]
+    [
+      "top",
+      "bottom"
+    ],
+    [
+      "top",
+      "footwear"
+    ],
+    [
+      "bottom",
+      "footwear"
+    ],
+    [
+      "top",
+      "outerwear"
+    ],
+    [
+      "bottom",
+      "outerwear"
+    ],
+    [
+      "outerwear",
+      "footwear"
+    ],
+    [
+      "one_piece",
+      "footwear"
+    ],
+    [
+      "one_piece",
+      "outerwear"
+    ]
+  ],
+  "default_k": 5
 }

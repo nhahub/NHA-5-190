@@ -1,41 +1,70 @@
 # M3: Pairwise compatibility, OCS and Top-K
 
-Owner: Hana. Reviewers: Asmaa (M3 -> M4 contract), Omar (category pairs).
+Owner: Hana. For Sunday review: Hana and Asmaa (M3 -> M4 contract), Omar (category pairs).
 
-## What this does
-- Takes C(i, j), the compatible-probability from Ziad's saved Logistic Regression, as a function `prob_fn(item_a_id, item_b_id) -> float`.
-- OCS = plain arithmetic mean of C(i, j) over the **relevant category pairs** in `configs/m3/ocs.json`. No weights.
-- Top-K = outfits sorted by OCS, highest first.
-- No training or calibration happens here.
+## What it does
+1. Takes candidate outfits (list of items with a category).
+2. Rejects invalid candidates, with a reason (see table).
+3. Scores each relevant item pair with C(i, j), the compatible-probability from Ziad's model.
+4. OCS = plain arithmetic mean of those pair scores. No weights.
+5. Ranks outfits by OCS and returns the top K.
 
-Code: `src/wardiq/compatibility/ocs.py` · Tests: `tests/test_ocs.py` · Example payload: `docs/m3/example_output.json`
+No training, calibration, weighting or second model here.
 
+Code: `src/wardiq/compatibility/ocs.py` | Tests: `tests/test_ocs.py` | Config: `configs/m3/ocs.json`
+
+## Commands
 ```bash
-pytest tests/test_ocs.py            # 17 passed
-python scripts/ocs_demo.py          # stub probabilities, prints the M3 -> M4 payload
+# build (pair_scores.json is a stand-in for Ziad's model until it is wired in)
+python scripts/build_recommendations.py \
+  --candidates docs/m3/sample/candidates.json --cache docs/m3/sample/cache_ids.json \
+  --scores docs/m3/sample/pair_scores.json --model-version STUB --cache-version STUB \
+  --k 5 --out docs/m3/example_output.json
+
+# load + check against the contract
+python scripts/load_recommendations.py docs/m3/example_output.json
+
+# tests (25 passed)
+pytest tests/test_ocs.py
 ```
+`--k` is optional; the default is `default_k` in `configs/m3/ocs.json`.
 
 ## Rules
 | Case | Result |
 |---|---|
-| Item has no category | listed in `excluded` (`item_unavailable`), never dropped silently |
-| `prob_fn` raises `ItemUnavailable` | that pair is excluded (`item_unavailable`) |
-| Probability is NaN, inf, <0, >1, not a number | that pair is excluded (`invalid_probability`) |
-| Some pairs excluded, some scored | `status: partial`, OCS = mean of the scored pairs |
-| No relevant pair exists | `ocs: null`, `status: no_relevant_pairs` |
-| Relevant pairs exist but none usable | `ocs: null`, `status: failed` |
-| Pair order | `prob_fn` is always called with the two ids sorted, so (a, b) = (b, a) |
-| Ties in Top-K | smaller `outfit_id` first |
+| Ranking | OCS high to low; ties go to the smaller `outfit_id`. Input order never matters. |
+| K larger than available outfits | All outfits are returned. `requested_k` and `returned_k` show the difference. No padding, no error. |
+| K below 1 | Error |
+| Empty input | `top_k: []`, `returned_k: 0` |
+| Fewer than 2 items / same item twice / an item not in the cache | Rejected: `too_few_items` / `repeated_item` / `item_not_in_cache` |
+| Same outfit_id twice / same set of items as an earlier outfit | Rejected: `duplicate_outfit_id` / `duplicate_of:<outfit_id>` |
+| No relevant pair in the outfit | Rejected: `no_relevant_pairs` |
+| Every relevant pair was unscorable or invalid | Rejected: `failed` |
+| Some pairs unscorable or probability invalid (NaN, <0, >1) | Pair listed in the outfit's `excluded`; `status: partial`; OCS is the mean of the rest |
+| Item with no category | Listed in the outfit's `excluded`; the other items are still scored |
+| Pair order | The model is always called with the two ids sorted, so (a, b) = (b, a) |
 
-## M3 -> M4 payload (`contract_version` 0.1.0)
-`contract_version`, `versions {model, cache, config}`, `calibration {status, evidence}`, `outfits [{outfit_id, item_ids, ocs, status, pairs [{pair_id, item_a, item_b, score}], excluded [{scope, id, reason}]}]`, `top_k [{rank, outfit_id, ocs}]`.
-`validate_output()` checks it. `calibration.status` stays `not_provided` until Ziad's calibration evidence is attached.
+Nothing is dropped silently: every candidate is either in `top_k` or in `rejected` with a reason.
 
-## Plugging in Ziad's model
-Wrap his saved model so it returns one probability for two item ids (looking features up in the feature cache) and raises `ItemUnavailable` when an item has no features. Pass it as `prob_fn`; pass real model/cache versions in `versions`.
+## Proposed M3 -> M4 output (`contract_version` 0.2.0)
+```
+contract_version   "0.2.0"
+versions           {model, cache, config}      all required
+calibration        {status: not_provided | evidence_attached, evidence: path or null}
+requested_k, returned_k
+top_k              [{rank, outfit_id, item_ids, ocs, status, pairs, excluded}]
+                   pairs:    [{pair_id, item_a, item_b, score}]   <- the explanation
+                   excluded: [{scope: item|pair, id, reason}]
+rejected           [{outfit_id, reason}]
+```
+`validate_output()` checks it (versions, K counts, unique outfits, ranks, ordering, OCS range, pair scores present). Example: `docs/m3/example_output.json`.
 
-## Still open (not decided by this PR)
-1. Category pairs in `configs/m3/ocs.json` are a **proposal** - Omar/Asmaa to confirm.
-2. Ziad's model version, interface and calibration evidence are not in the repo yet, so "calibrated probabilities" is **not** claimed.
-3. Symmetry and the tie rule are my defaults - Asmaa to confirm.
-4. Demo output uses stub scores only; no real metrics yet.
+## Plug in Ziad's model
+Replace `prob` in `scripts/build_recommendations.py` with a function that returns his probability for two item ids (features from the chosen cache) and raises `ItemUnavailable` when an item has no features. Pass the real model and cache versions.
+
+## Not done yet (honest status)
+1. **No real eligible data yet.** The repo has no Ziad model and no feature cache, so the run above uses 5 stub candidates and made-up pair scores. Counts and metrics must be re-run on real data.
+2. **Calibration is not claimed.** `calibration.status` stays `not_provided` until Ziad's evidence is attached.
+3. **Category pairs in `configs/m3/ocs.json` are a proposal** for Omar and Asmaa to agree.
+4. Tie rule, symmetry and contract 0.2.0 (bumped from 0.1.0 when ranking fields were added) are proposals for Sunday's review.
+5. "Explanations" are the per-pair scores only; no other explanation source exists.

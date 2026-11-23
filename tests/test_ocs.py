@@ -1,14 +1,18 @@
+import json
 import math
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 from wardiq.compatibility.ocs import (
     ItemUnavailable,
-    build_m3_output,
     item_from_record,
     load_relevant_pairs,
     pair_id,
+    recommend,
     score_outfit,
     top_k,
     validate_output,
@@ -16,6 +20,27 @@ from wardiq.compatibility.ocs import (
 
 VERSIONS = {"model": "stub-0", "cache": "stub-0", "config": "0.1.0"}
 PAIRS = frozenset({frozenset(("top", "bottom")), frozenset(("top", "footwear"))})
+
+
+def test_legacy_demo_uses_current_ranking_contract():
+    root = Path(__file__).resolve().parents[1]
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(root / "src") + os.pathsep + env.get("PYTHONPATH", "")
+    result = subprocess.run(
+        [sys.executable, str(root / "scripts" / "ocs_demo.py")],
+        cwd=root,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    output = json.loads(result.stdout)
+    assert validate_output(output) == []
+    assert output["returned_k"] == 2
+    assert [row["outfit_id"] for row in output["top_k"]] == ["outfit_1", "outfit_2"]
+    assert output["versions"]["model"] == "STUB"
+
+
 ITEMS = [
     {"item_id": "t1", "category": "top"},
     {"item_id": "b1", "category": "bottom"},
@@ -91,29 +116,122 @@ def test_versions_are_required():
         score_outfit("o1", ITEMS, fake({}), PAIRS, {"model": "stub-0"})
 
 
-def test_top_k_orders_by_ocs_then_outfit_id():
-    outfits = [
+def outfit(outfit_id, ids, cats=("top", "bottom", "footwear")):
+    return {
+        "outfit_id": outfit_id,
+        "items": [{"item_id": i, "category": c} for i, c in zip(ids, cats)],
+    }
+
+
+CACHE = {"t1", "b1", "f1", "t2", "b2", "f2"}
+SCORES = {
+    "b1|t1": 0.8,
+    "f1|t1": 0.6,
+    "b1|f1": 0.7,  # outfit a -> 0.7
+    "b2|t2": 0.4,
+    "f2|t2": 0.5,
+    "b2|f2": 0.6,  # outfit b -> 0.5
+}
+ALL_PAIRS = frozenset(
+    frozenset(p) for p in [("top", "bottom"), ("top", "footwear"), ("bottom", "footwear")]
+)
+
+
+def run(candidates, k=5, scores=SCORES):
+    return recommend(candidates, fake(scores), ALL_PAIRS, VERSIONS, CACHE, k)
+
+
+A = outfit("a", ["t1", "b1", "f1"])
+B = outfit("b", ["t2", "b2", "f2"])
+
+
+def test_ranking_and_pair_scores_are_kept():
+    out = run([B, A])
+    assert [r["outfit_id"] for r in out["top_k"]] == ["a", "b"]
+    assert [r["rank"] for r in out["top_k"]] == [1, 2]
+    assert len(out["top_k"][0]["pairs"]) == 3
+    assert out["versions"] == VERSIONS
+    assert validate_output(out) == []
+
+
+def test_ties_go_to_smaller_outfit_id():
+    rows = [
         {"outfit_id": "b", "ocs": 0.7},
         {"outfit_id": "a", "ocs": 0.7},
         {"outfit_id": "c", "ocs": 0.9},
-        {"outfit_id": "d", "ocs": None},
     ]
-    assert [r["outfit_id"] for r in top_k(outfits, 3)] == ["c", "a", "b"]
+    assert [r["outfit_id"] for r in top_k(rows, 3)] == ["c", "a", "b"]
+
+
+def test_k_larger_than_available_returns_all_without_error():
+    out = run([A, B], k=10)
+    assert (out["requested_k"], out["returned_k"]) == (10, 2)
+    assert validate_output(out) == []
+
+
+def test_k_smaller_cuts_the_list_and_k_must_be_positive():
+    assert run([A, B], k=1)["returned_k"] == 1
     with pytest.raises(ValueError):
-        top_k(outfits, 0)
+        run([A, B], k=0)
 
 
-def test_output_contract_passes_and_bad_output_fails():
-    outfit = score(scores={"b1|t1": 0.2, "f1|t1": 0.8})
-    output = build_m3_output([outfit], k=1, versions=VERSIONS)
-    assert validate_output(output) == []
-    assert output["calibration"]["status"] == "not_provided"
+def test_empty_input():
+    out = run([])
+    assert out["top_k"] == [] and out["rejected"] == [] and out["returned_k"] == 0
+    assert validate_output(out) == []
 
-    output["outfits"][0]["ocs"] = 1.5
-    output["versions"]["model"] = ""
-    problems = validate_output(output)
-    assert "o1: ocs out of range" in problems
+
+def test_duplicate_candidates_are_rejected_once_each():
+    same_items_other_order = outfit("a2", ["f1", "t1", "b1"], ("footwear", "top", "bottom"))
+    same_id_again = outfit("a", ["t2", "b2", "f2"])
+    out = run([A, same_items_other_order, same_id_again])
+    assert [r["outfit_id"] for r in out["top_k"]] == ["a"]
+    reasons = {r["outfit_id"]: r["reason"] for r in out["rejected"]}
+    assert reasons == {"a": "duplicate_outfit_id", "a2": "duplicate_of:a"}
+
+
+def test_invalid_and_unscorable_candidates_get_reasons():
+    out = run(
+        [
+            A,
+            outfit("one", ["t1"], ("top",)),
+            outfit("rep", ["t1", "t1"], ("top", "top")),
+            outfit("nocache", ["t1", "zz"], ("top", "bottom")),
+            outfit("norel", ["t1", "t2"], ("top", "top")),
+            outfit("nan", ["t2", "b2"], ("top", "bottom")),
+        ],
+        scores={**SCORES, "b2|t2": math.nan},
+    )
+    reasons = {r["outfit_id"]: r["reason"] for r in out["rejected"]}
+    assert reasons == {
+        "one": "too_few_items",
+        "rep": "repeated_item",
+        "nocache": "item_not_in_cache",
+        "norel": "no_relevant_pairs",
+        "nan": "failed",
+    }
+    assert [r["outfit_id"] for r in out["top_k"]] == ["a"]
+
+
+def test_same_result_on_repeat_and_for_any_input_order():
+    first = run([A, B])
+    assert run([A, B]) == first
+    assert run([B, A]) == first
+
+
+def test_bad_output_fails_validation_with_reasons():
+    out = run([A, B])
+    out["top_k"][0]["ocs"] = 0.1  # now lower than rank 2
+    out["versions"]["model"] = ""
+    problems = validate_output(out)
+    assert "top_k is not ordered by ocs, then outfit_id" in problems
     assert "versions.model missing" in problems
+
+
+def test_calibration_is_only_claimed_with_evidence():
+    assert run([A])["calibration"]["status"] == "not_provided"
+    out = recommend([A], fake(SCORES), ALL_PAIRS, VERSIONS, CACHE, 1, "reports/calibration.md")
+    assert out["calibration"]["status"] == "evidence_attached"
 
 
 def test_item_from_m2_record_and_config_load():

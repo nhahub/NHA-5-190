@@ -1,5 +1,5 @@
 {
-  "contract_version": "0.1.0",
+  "contract_version": "0.2.0",
   "versions": {
     "model": "STUB",
     "cache": "STUB",
@@ -9,9 +9,12 @@
     "status": "not_provided",
     "evidence": null
   },
-  "outfits": [
+  "requested_k": 5,
+  "returned_k": 2,
+  "top_k": [
     {
-      "outfit_id": "outfit_1",
+      "rank": 1,
+      "outfit_id": "outfit_a",
       "item_ids": [
         "t1",
         "b1",
@@ -42,7 +45,8 @@
       "excluded": []
     },
     {
-      "outfit_id": "outfit_2",
+      "rank": 2,
+      "outfit_id": "outfit_b",
       "item_ids": [
         "t2",
         "b2",
@@ -73,16 +77,18 @@
       "excluded": []
     }
   ],
-  "top_k": [
+  "rejected": [
     {
-      "rank": 1,
-      "outfit_id": "outfit_1",
-      "ocs": 0.7000000000000001
+      "outfit_id": "outfit_c_copy_of_a",
+      "reason": "duplicate_of:outfit_a"
     },
     {
-      "rank": 2,
-      "outfit_id": "outfit_2",
-      "ocs": 0.5
+      "outfit_id": "outfit_d_missing_item",
+      "reason": "item_not_in_cache"
+    },
+    {
+      "outfit_id": "outfit_e_no_pair",
+      "reason": "no_relevant_pairs"
     }
   ]
 }
