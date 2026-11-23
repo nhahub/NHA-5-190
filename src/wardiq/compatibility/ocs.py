@@ -67,9 +67,7 @@ def score_outfit(
     usable = []
     for item in items:
         if item.get("category") is None:
-            excluded.append(
-                {"scope": "item", "id": item["item_id"], "reason": "item_unavailable"}
-            )
+            excluded.append({"scope": "item", "id": item["item_id"], "reason": "item_unavailable"})
         else:
             usable.append(item)
 
