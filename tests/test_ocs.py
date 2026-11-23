@@ -1,4 +1,8 @@
+import json
 import math
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -16,6 +20,27 @@ from wardiq.compatibility.ocs import (
 
 VERSIONS = {"model": "stub-0", "cache": "stub-0", "config": "0.1.0"}
 PAIRS = frozenset({frozenset(("top", "bottom")), frozenset(("top", "footwear"))})
+
+
+def test_legacy_demo_uses_current_ranking_contract():
+    root = Path(__file__).resolve().parents[1]
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(root / "src") + os.pathsep + env.get("PYTHONPATH", "")
+    result = subprocess.run(
+        [sys.executable, str(root / "scripts" / "ocs_demo.py")],
+        cwd=root,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    output = json.loads(result.stdout)
+    assert validate_output(output) == []
+    assert output["returned_k"] == 2
+    assert [row["outfit_id"] for row in output["top_k"]] == ["outfit_1", "outfit_2"]
+    assert output["versions"]["model"] == "STUB"
+
+
 ITEMS = [
     {"item_id": "t1", "category": "top"},
     {"item_id": "b1", "category": "bottom"},
