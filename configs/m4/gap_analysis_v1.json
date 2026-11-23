@@ -1,0 +1,43 @@
+{
+  "schema_version": "wardiq.m4.gap-analysis-config.v1",
+  "config_version": "1.0.0",
+  "status": "provisional_pending_review",
+  "m3_candidate_rules_ref": "configs/m3/candidate_generation_v1.json",
+  "template_active_categories": [
+    "top",
+    "bottom",
+    "one_piece",
+    "outerwear",
+    "footwear",
+    "bag"
+  ],
+  "usefulness_policy": {
+    "min_useful_ocs": 0.5,
+    "count_only_structurally_valid": true
+  },
+  "redundancy_policy": {
+    "embedding_similarity_threshold": 0.85,
+    "attribute_overlap_threshold": 0.8,
+    "max_category_saturation": 3,
+    "flag_exact_item_id_match": true
+  },
+  "ranking_policy": {
+    "primary_metric": "gap_score",
+    "weights": {
+      "normalized_gain": 0.6,
+      "avg_ocs": 0.4
+    },
+    "redundancy_penalty_weight": 0.5,
+    "tie_breakers": [
+      "incremental_useful_combinations_desc",
+      "avg_ocs_desc",
+      "redundancy_score_asc",
+      "candidate_category_asc",
+      "candidate_item_id_asc"
+    ]
+  },
+  "missing_signal_policy": {
+    "fabricate_missing_signals": false,
+    "unprovided_wus_fields": ["preference", "context", "wus"]
+  }
+}
