@@ -1,0 +1,392 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "wardiq://m4/product-match-spec/1.0.0",
+    "title": "WARDIQ Product Matching Specification",
+    "schema_version": "1.0.0",
+    "status": "provisional",
+    "description": "Versioned product-matching output contract for M4 Wardrobe Gap Analysis candidates. Does not implement live product matching or catalog integration.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schema_version",
+        "wardrobe_ref",
+        "config_ref",
+        "rank",
+        "candidate_item_id",
+        "target_category",
+        "is_synthetic_candidate",
+        "gap_score",
+        "incremental_useful_combinations",
+        "avg_ocs",
+        "unlocked_templates",
+        "redundancy_score",
+        "explanation"
+    ],
+    "properties": {
+        "schema_version": {
+            "const": "wardiq.m4.gap-candidate-product-record.v1"
+        },
+        "wardrobe_ref": {
+            "type": "string",
+            "minLength": 1
+        },
+        "config_ref": {
+            "type": "string",
+            "minLength": 1
+        },
+        "rank": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "candidate_item_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Stable identifier of the gap candidate."
+        },
+        "target_category": {
+            "type": "string",
+            "enum": [
+                "top",
+                "bottom",
+                "one_piece",
+                "outerwear",
+                "footwear",
+                "bag",
+                "headwear",
+                "eyewear",
+                "scarf",
+                "jewellery",
+                "accessory_other"
+            ]
+        },
+        "is_synthetic_candidate": {
+            "type": "boolean"
+        },
+        "gap_score": {
+            "type": "number",
+            "description": "Gap ranking score calculated by Wardrobe Gap Analysis."
+        },
+        "incremental_useful_combinations": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "avg_ocs": {
+            "type": [
+                "number",
+                "null"
+            ],
+            "description": "Average OCS of useful combinations. Null when unavailable."
+        },
+        "unlocked_templates": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },
+        "redundancy_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+        },
+        "explanation": {
+            "type": "string",
+            "minLength": 1
+        },
+        "candidate_attributes": {
+            "type": "object",
+            "description": "Optional attributes sourced from the M2 item representation.",
+            "properties": {
+                "attributes": {
+                    "type": [
+                        "object",
+                        "null"
+                    ],
+                    "properties": {
+                        "vocabulary_source": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "vocabulary_version": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "scores": {
+                            "type": [
+                                "object",
+                                "null"
+                            ],
+                            "additionalProperties": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ],
+                                "minimum": 0,
+                                "maximum": 1
+                            }
+                        },
+                        "mask": {
+                            "type": [
+                                "object",
+                                "null"
+                            ],
+                            "additionalProperties": {
+                                "enum": [
+                                    "present",
+                                    "not_annotated",
+                                    "unavailable_in_source"
+                                ]
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "color": {
+                    "type": [
+                        "object",
+                        "null"
+                    ],
+                    "properties": {
+                        "model": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "model_version": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "palette": {
+                            "type": [
+                                "array",
+                                "null"
+                            ],
+                            "minItems": 1,
+                            "maxItems": 8,
+                            "items": {
+                                "type": "object",
+                                "required": [
+                                    "L",
+                                    "a",
+                                    "b",
+                                    "proportion"
+                                ],
+                                "properties": {
+                                    "L": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 100
+                                    },
+                                    "a": {
+                                        "type": "number",
+                                        "minimum": -128,
+                                        "maximum": 127
+                                    },
+                                    "b": {
+                                        "type": "number",
+                                        "minimum": -128,
+                                        "maximum": 127
+                                    },
+                                    "proportion": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                    }
+                                },
+                                "additionalProperties": false
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "embedding": {
+                    "type": [
+                        "object",
+                        "null"
+                    ],
+                    "properties": {
+                        "model": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "model_version": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "dimension": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "minimum": 1
+                        },
+                        "provisional_dimension": {
+                            "type": "boolean"
+                        },
+                        "vector": {
+                            "type": [
+                                "array",
+                                "null"
+                            ],
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "formality": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "season": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "additionalProperties": false
+        },
+        "applicable_constraints": {
+            "type": "array",
+            "description": "Optional references to applicable category, template, or compatibility constraints.",
+            "items": {
+                "type": "string",
+                "minLength": 1
+            },
+            "uniqueItems": true
+        },
+        "wus_evidence": {
+            "type": "object",
+            "description": "Optional utility evidence following Hana's WUS handoff contract.",
+            "required": [
+                "schema_version",
+                "wardrobe_ref",
+                "candidate_item_id",
+                "gain",
+                "avg_ocs",
+                "preference",
+                "context",
+                "redundancy",
+                "wus",
+                "config_ref"
+            ],
+            "properties": {
+                "schema_version": {
+                    "const": "wardiq.wardrobe-utility.v1"
+                },
+                "wardrobe_ref": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "candidate_item_id": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "gain": {
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "minimum": 0
+                },
+                "avg_ocs": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "preference": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "context": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "redundancy": {
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "wus": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "config_ref": {
+                    "type": "string",
+                    "minLength": 1
+                }
+            },
+            "additionalProperties": false
+        },
+        "catalog_matching": {
+            "type": "object",
+            "description": "Optional fields reserved for a future catalog-matching component.",
+            "properties": {
+                "product_id": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "brand": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "size": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "price": {
+                    "type": [
+                        "number",
+                        "null"
+                    ],
+                    "minimum": 0
+                },
+                "currency": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "product_url": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uri"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}
