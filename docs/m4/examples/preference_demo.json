@@ -1,0 +1,48 @@
+{
+  "user_id": "u",
+  "catalog_version": "demo-v1",
+  "feature_schema_version": "demo-features-v1",
+  "items": {
+    "a": [
+      "category:top"
+    ],
+    "b": [
+      "category:top"
+    ],
+    "c": []
+  },
+  "outfits": {
+    "outfit": [
+      "b",
+      "c"
+    ]
+  },
+  "events": [
+    {
+      "schema_version": "wardiq.feedback.v1",
+      "event_id": "e1",
+      "user_id": "u",
+      "target_type": "item",
+      "target_id": "a",
+      "action": "like",
+      "occurred_at": "2026-11-16T10:00:00Z",
+      "source": "synthetic"
+    }
+  ],
+  "queries": [
+    {
+      "target_type": "item",
+      "target_id": "b"
+    },
+    {
+      "target_type": "outfit",
+      "target_id": "outfit"
+    }
+  ],
+  "as_of": "2026-11-16T23:59:59Z",
+  "feature_weights": {
+    "category": 1,
+    "color": 1,
+    "attribute": 1
+  }
+}
